@@ -15,7 +15,7 @@ export default function AuctionItem({ item }: AuctionItemProps) {
         alt="Picture of the author"
       />
       <div className="px-2 py-4 relative pt-12">
-        <div className="w-[90%] text-sm rounded-2xl text-[#fff] flex flex-col items-center font-bold py-1 px-4 bg-[#f87171] overflow-hidden absolute z-10 -top-8 left-[5%]">
+        <div className="w-[90%] text-sm rounded-2xl text-[#fff] flex flex-col items-center font-bold py-1 px-4 bg-[#f87171] overflow-hidden absolute z-1 -top-8 left-[5%]">
           <div className="w-full flex items-center overflow-hidden">
             <LapTimerIcon className="mr-2" />
             <span>{item.deadline}</span>

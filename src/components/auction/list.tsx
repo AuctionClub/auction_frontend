@@ -1,6 +1,6 @@
 import { ScrollArea } from '@radix-ui/themes'
 import { ChevronRightIcon } from '@radix-ui/react-icons'
-import AuctionItem from '@/components/auction-item'
+import AuctionItem from '@/components/auction/item'
 
 export default function AuctionList() {
   const list = [
@@ -65,9 +65,9 @@ export default function AuctionList() {
     <div className="my-20 flex place-content-center relative">
       <div className="md:max-w-screen-lg flex-1 2xl:max-w-7xl px-6 md:px-10">
         <div className="flex justify-between font-bold text-lg">
-          <div>市场</div>
+          <div>Market</div>
           <div className="flex items-center cursor-pointer">
-            更多
+            more
             <ChevronRightIcon className="w-5 h-5" />
           </div>
         </div>
