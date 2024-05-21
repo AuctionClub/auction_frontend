@@ -8,9 +8,11 @@ import { cn } from '@/lib/utils'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 
+import { useRouter } from "next/navigation";
+
 export const Navbar = () => {
   const scroll = useScroll(() => document)
-
+  const router = useRouter();
   return (
     <header
       className={cn(
@@ -23,6 +25,11 @@ export const Navbar = () => {
           DIYAuction
         </span>
         <ConnectButton />
+          <button className="Button font-bold rounded border-2" onClick={() => {
+            router.push('/personal');
+          }}>
+            Personal Center
+        </button>
       </div>
     </header>
   )
