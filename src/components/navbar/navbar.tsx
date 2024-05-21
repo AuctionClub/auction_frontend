@@ -9,6 +9,8 @@ import { cn } from '@/lib/utils'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 import { useRouter } from "next/navigation";
+import AvatarDiv from '../avatar'
+import TooltipProvider from '../tooltip'
 
 export const Navbar = () => {
   const scroll = useScroll(() => document)
@@ -24,12 +26,16 @@ export const Navbar = () => {
         <span className="ml-2 font-semibold text-primary text-3xl">
           DIYAuction
         </span>
-        <ConnectButton />
-          <button className="Button font-bold rounded border-2" onClick={() => {
-            router.push('/personal');
-          }}>
-            Personal Center
-        </button>
+        <div className=' flex justify-between items-center'>
+            <ConnectButton />
+            <TooltipProvider text='Personal Center'>
+              <AvatarDiv iconAttr={{height:25,width:25}} className="cursor-pointer text-[2rem]" onClick={() => {
+                router.push('/personal');
+            }}></AvatarDiv>
+            </TooltipProvider>
+         
+        </div>
+
       </div>
     </header>
   )

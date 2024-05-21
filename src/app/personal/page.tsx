@@ -1,28 +1,29 @@
 import React from 'react'
+import MyNFT from './_components/MyNFT';
+import MyBalance from './_components/MyBalance';
+import InitiatedAuctionRecord from './_components/InitiatedAuctionRecord';
+import BidRecord from './_components/BidRecord';
 
 const page = () => {
    return (
-    <div className="flex flex-wrap w-full h-[93vh]">
-      <div className="w-1/2 border border-gray-300 flex items-center justify-center">
-        <div className="text-center">
-            MY NFT
+    <div className="flex flex-wrap w-full ">
+      <div className="w-1/2  flex-col ">
+        <div className="text-center  flex-grow">
+            <MyNFT></MyNFT>
         </div>
       </div>
-      <div className="w-1/2 border border-gray-300 flex items-center justify-center">
-        <div className="text-center">
-            Balance
-        </div>
-        <button>
-            Withdraw
-        </button>
+      <div className="w-1/2   ">
+        <MyBalance></MyBalance>
       </div>
-      <div className="w-1/2 border border-gray-300 flex items-center justify-center">
-        <div className="text-center">
-           Bid Record 
+        <div className="w-1/2 ">
+        <div className="text-center ">
+          <BidRecord />
         </div>
       </div>
-      <div className="w-1/2 border border-gray-300 flex items-center justify-center">
-        <div className="text-center">Initiated Auction Record</div>
+      <div className="w-1/2 flex flex-col">
+        <div className="text-center flex-grow">
+          <InitiatedAuctionRecord />
+        </div>
       </div>
     </div>
   );
