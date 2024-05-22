@@ -4,7 +4,7 @@ import MyNFT from "./_components/MyNFT";
 import MyBalance from "./_components/MyBalance";
 import InitiatedAuctionRecord from "./_components/InitiatedAuctionRecord";
 import BidRecord from "./_components/BidRecord";
-import { useAccount, useChains } from "wagmi";
+import { useAccount } from "wagmi";
 import * as Toast from "@radix-ui/react-toast";
 import { Heading } from "@radix-ui/themes";
 const Page = () => {

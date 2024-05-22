@@ -1,9 +1,9 @@
-import './globals.css'
-import '@rainbow-me/rainbowkit/styles.css'
-import '@radix-ui/themes/styles.css'
-import { Providers } from './providers'
-import { Navbar } from '@/components/navbar'
-import { Theme } from '@radix-ui/themes'
+import "./globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import "@radix-ui/themes/styles.css";
+import { Providers } from "./providers";
+import { Navbar } from "@/components/navbar";
+import { Theme } from "@radix-ui/themes";
 
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +17,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         </Theme>
       </body>
     </html>
-  )
+  );
 }
 
-export default RootLayout
+export default RootLayout;

@@ -1,9 +1,9 @@
-import Image from 'next/image'
-import { LapTimerIcon } from '@radix-ui/react-icons'
+import Image from "next/image";
+import { LapTimerIcon } from "@radix-ui/react-icons";
 
 type AuctionItemProps = {
-  item: any
-}
+  item: any;
+};
 
 export default function AuctionItem({ item }: AuctionItemProps) {
   return (
@@ -37,10 +37,10 @@ export default function AuctionItem({ item }: AuctionItemProps) {
           </div>
           <div className="flex mt-0.5">
             <p>类型：</p>
-            <p>{item.tags.join(' · ')}</p>
+            <p>{item.tags.join(" · ")}</p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

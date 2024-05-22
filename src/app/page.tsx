@@ -1,8 +1,8 @@
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
-import HeroSection from '@/components/hero-section'
-import AuctionList from '@/components/auction/list'
-import CollectList from '@/components/collect/list'
+import HeroSection from "@/components/hero-section";
+import AuctionList from "@/components/auction/list";
+import CollectList from "@/components/collect/list";
 
 export default function Page() {
   return (
@@ -11,5 +11,5 @@ export default function Page() {
       <AuctionList />
       <CollectList />
     </div>
-  )
+  );
 }

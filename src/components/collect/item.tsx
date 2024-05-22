@@ -1,8 +1,8 @@
-import Image from 'next/image'
-import bg_default from '/public/bg_default.png'
+import Image from "next/image";
+import bg_default from "/public/bg_default.png";
 type CollectItemProps = {
-  item: any
-}
+  item: any;
+};
 
 export default function CollectItem({ item }: CollectItemProps) {
   return (
@@ -28,5 +28,5 @@ export default function CollectItem({ item }: CollectItemProps) {
         </div> */}
       </div>
     </div>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 export default function HeroSection() {
   return (
@@ -7,15 +7,15 @@ export default function HeroSection() {
         <strong
           className={cn(
             `text-5xl md:text-8xl !leading-tight tracking-widest font-black  bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500`,
-            'animate-fade-up animate-ease-in-out'
+            "animate-fade-up animate-ease-in-out",
           )}
           style={{
-            WebkitTextFillColor: 'transparent',
+            WebkitTextFillColor: "transparent",
           }}
         >
           DIYAuction
         </strong>
-        <p className={cn('text-base md:text-2xl indent-8')}>
+        <p className={cn("text-base md:text-2xl indent-8")}>
           Smart contract-based auction platform to provide a fair and reliable
           auction environment for traders. At present, the platform supports two
           models of British auction and American auction, and provides a variety
@@ -26,5 +26,5 @@ export default function HeroSection() {
         </p>
       </div>
     </div>
-  )
+  );
 }
