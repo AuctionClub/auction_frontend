@@ -24,7 +24,12 @@ export const Navbar = () => {
       )}
     >
       <div className="w-full flex justify-between items-center h-16 p-4 sm:p-8 md:max-w-screen-lg 2xl:max-w-screen-xl">
-        <span className="ml-2 font-semibold text-primary text-3xl">
+        <span
+          className="ml-2 font-semibold text-primary text-3xl cursor-pointer"
+          onClick={() => {
+            router.push("/");
+          }}
+        >
           DIYAuction
         </span>
         <div className=" flex justify-between items-center">

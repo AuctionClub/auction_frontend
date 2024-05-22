@@ -7,5 +7,7 @@
     "plugins": [
         "prettier"
     ],
-    "rules": {}
+    "rules": {
+        "no-unused-vars": 0
+    }
 }
