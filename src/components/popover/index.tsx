@@ -16,12 +16,12 @@ const PopoverWarp = ({ children, ...rest }: any) => {
             variant="soft"
             style={{ width: "100%", marginBottom: ".5rem" }}
           >
-            竞拍
+            Bid
           </Button>
         </div>
         <div>
           <Button color="indigo" variant="soft" style={{ width: "100%" }}>
-            查看
+            View
           </Button>
         </div>
       </Popover.Content>
