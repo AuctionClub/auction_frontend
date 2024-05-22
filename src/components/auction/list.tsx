@@ -1,6 +1,7 @@
 import { ScrollArea } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
+import PopoverWarp from "../popover";
 
 export default function AuctionList() {
   const list = [
@@ -66,11 +67,13 @@ export default function AuctionList() {
       <div className="md:max-w-screen-lg flex-1 2xl:max-w-7xl px-6 md:px-10">
         <div className="flex justify-between font-bold text-lg">
           <div>Market</div>
+
           <div className="flex items-center cursor-pointer">
             more
             <ChevronRightIcon className="w-5 h-5" />
           </div>
         </div>
+
         <ScrollArea
           size="3"
           radius="full"
@@ -78,8 +81,12 @@ export default function AuctionList() {
           scrollbars="horizontal"
         >
           <div className="flex justify-between mb-5 mt-5">
-            {list.map((i) => {
-              return <AuctionItem item={i} />;
+            {list.map((e, i) => {
+              return (
+                <PopoverWarp className="ml-2 mr-2" key={i}>
+                  <AuctionItem item={e} />
+                </PopoverWarp>
+              );
             })}
           </div>
         </ScrollArea>
