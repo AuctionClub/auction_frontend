@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { ScrollArea } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
@@ -71,9 +72,7 @@ const MyNFT = () => {
         </div>
         <ScrollArea size="1" type="always" scrollbars="horizontal">
           <div className="flex justify-between">
-            {list.map((e, i) => {
-              return <AuctionItem item={e} key={i} />;
-            })}
+            {list.map((e, i) => <AuctionItem item={e} key={i} />)}
           </div>
         </ScrollArea>
       </div>

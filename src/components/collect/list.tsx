@@ -1,4 +1,5 @@
 "use client";
+
 import { ScrollArea } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/collect/item";
@@ -81,9 +82,7 @@ export default function CollectList() {
           scrollbars="horizontal"
         >
           <div className="flex justify-between mb-5 mt-5">
-            {list.map((i, index) => {
-              return <AuctionItem item={i} key={index} />;
-            })}
+            {list.map((i, index) => <AuctionItem item={i} key={index} />)}
           </div>
         </ScrollArea>
       </div>

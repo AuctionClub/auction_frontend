@@ -81,13 +81,11 @@ export default function AuctionList() {
           scrollbars="horizontal"
         >
           <div className="flex justify-between mb-5 mt-5">
-            {list.map((e, i) => {
-              return (
-                <PopoverWarp className="ml-2 mr-2" key={i}>
-                  <AuctionItem item={e} />
-                </PopoverWarp>
-              );
-            })}
+            {list.map((e, i) => (
+              <PopoverWarp className="ml-2 mr-2" key={i}>
+                <AuctionItem item={e} />
+              </PopoverWarp>
+            ))}
           </div>
         </ScrollArea>
       </div>

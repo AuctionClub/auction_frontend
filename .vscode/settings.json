@@ -7,4 +7,19 @@
     "eslint.options": {
         "overrideConfigFile": "./.eslintrc.json"
     },
+    "eslint.enable": true, // 是否开启检测
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "jsx",
+        "tsx",
+        "typescriptreact",
+        "html",
+        "vue",
+        "markdown",
+        "json"
+    ],
+    "eslint.format.enable": true,
 }

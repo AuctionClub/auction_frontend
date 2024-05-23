@@ -19,8 +19,8 @@ export const Navbar = () => {
     <header
       className={cn(
         " hover:shadow-lg shadow-md w-full sticky top-0 backdrop-blur transition-[background-color,border-width] border-x-0  flex justify-center z-10",
-        (scroll?.top ?? 0) > 60 &&
-          "bg-background/50 border-b border-border/50  hover:shadow-lg shadow-md ",
+        (scroll?.top ?? 0) > 60
+          && "bg-background/50 border-b border-border/50  hover:shadow-lg shadow-md ",
       )}
     >
       <div className="w-full flex justify-between items-center h-16 p-4 sm:p-8 md:max-w-screen-lg 2xl:max-w-screen-xl">
@@ -41,7 +41,7 @@ export const Navbar = () => {
               onClick={() => {
                 router.push("/personal");
               }}
-            ></AvatarDiv>
+            />
           </TooltipProvider>
         </div>
       </div>

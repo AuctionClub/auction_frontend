@@ -6,7 +6,7 @@ export default function HeroSection() {
       <div className="md:max-w-screen-lg  2xl:max-w-7xl  gap-5 flex flex-col justify-center min-h-full px-6 md:px-10">
         <strong
           className={cn(
-            `text-5xl md:text-8xl !leading-tight tracking-widest font-black  bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500`,
+            "text-5xl md:text-8xl !leading-tight tracking-widest font-black  bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500",
             "animate-fade-up animate-ease-in-out",
           )}
           style={{

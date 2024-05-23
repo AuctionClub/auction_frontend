@@ -24,7 +24,7 @@ const { wallets } = getDefaultWallets();
 const config = getDefaultConfig({
   appName: "RainbowKit demo",
   projectId: "YOUR_PROJECT_ID",
-  wallets: wallets,
+  wallets,
   chains: [
     mainnet,
     polygon,
