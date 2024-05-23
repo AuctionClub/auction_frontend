@@ -3,11 +3,15 @@
 import React from "react";
 import Image from "next/image";
 import { Badge } from "@radix-ui/themes";
+import useStore from "@/store";
 
-type Props = {}
+type Props = {
+
+}
 
 const DetailPage = (props: Props) => {
-  console.log(props, "##################");
+  const CurrentNFT = useStore((state:any) => state.CurrentNFT);
+  console.log(CurrentNFT, "CurrentNFTCurrentNFTCurrentNFTCurrentNFT");
 
   return (
   // TODO　跨页面数据传递
@@ -29,19 +33,38 @@ const DetailPage = (props: Props) => {
           <p className="text-lg font-bold mb-2">
             Final Price:
             {" "}
-            <span className="text-indigo-600">1000 ETH</span>
+            <span className="text-indigo-600">
+              {CurrentNFT.currentBid}
+              {" "}
+              {/* ETH */}
+            </span>
           </p>
           <p className="text-lg font-bold mb-2">
             Starting Price:
             {" "}
-            <span className="text-indigo-600">1000 ETH</span>
+            <span className="text-indigo-600">
+              {CurrentNFT.price}
+              {" "}
+              {/* ETH */}
+            </span>
+          </p>
+          <p className="text-lg font-bold mb-2">
+            Deadline:
+            {CurrentNFT.deadline}
           </p>
           <p className="text-lg font-bold mb-2">
             Auction Type:
             {" "}
-            <Badge size="3" color="indigo">Dutch Auction</Badge>
+            {CurrentNFT.tags.map((tag: string) => (
+              <Badge size="3" color="indigo" key={tag}>
+                {tag}
+              </Badge>
+            ))}
+
           </p>
+
         </div>
+        <div />
       </div>
     </div>
   );

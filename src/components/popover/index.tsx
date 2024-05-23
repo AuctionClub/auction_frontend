@@ -1,13 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, Button, Popover } from "@radix-ui/themes";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import useStore from "@/store";
 
 const PopoverWarp = ({ children, item, ...rest }: any) => {
   const router = useRouter();
+  const setCurrentNFT = useStore((state:any) => state.setCurrentNFT);
   console.log(item, "@@@##");
+  useEffect(() => {
+    setCurrentNFT(item);
+  }, []);
+
   return (
     <Popover.Root>
       <Popover.Trigger>
