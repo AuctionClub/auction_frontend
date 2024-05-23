@@ -1,5 +1,5 @@
 import Image from "next/image";
-import bg_default from "../../../../public/bg_default.png";
+import bg_default from "/public/bg_default.png";
 
 type CollectItemProps = {
   item: any;
