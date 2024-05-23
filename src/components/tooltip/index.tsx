@@ -11,7 +11,7 @@ const TooltipProvider = ({
   <Tooltip.Provider>
     <Tooltip.Root>
       <Tooltip.Trigger asChild>
-        <button className="text-violet11  hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center rounded-full bg-white ">
+        <button className="text-violet11  hover:bg-violet3 inline-flex h-[35px] w-[35px] items-center justify-center mx-3 ">
           {children}
         </button>
       </Tooltip.Trigger>

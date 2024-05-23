@@ -34,10 +34,10 @@ export const Navbar = () => {
         </span>
         <div className=" flex justify-between items-center">
           <ConnectButton />
-          <TooltipProvider text="Personal Center">
+          <TooltipProvider text="Personal Center" className="mx-2">
             <AvatarDiv
               iconAttr={{ height: 25, width: 25 }}
-              className="cursor-pointer text-[2rem]"
+              className="cursor-pointer text-[2rem] mx-2"
               onClick={() => {
                 router.push("/personal");
               }}
