@@ -1,10 +1,10 @@
-import React from "react";
+"use client";
 
+import React from "react";
 import { Text, Button, Popover } from "@radix-ui/themes";
 import { useRouter, usePathname } from "next/navigation";
 
 const PopoverWarp = ({ children, item, ...rest }: any) => {
-  const Pathname = usePathname();
   const router = useRouter();
   return (
     <Popover.Root>
