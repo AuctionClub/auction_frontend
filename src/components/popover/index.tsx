@@ -3,9 +3,11 @@
 import React from "react";
 import { Text, Button, Popover } from "@radix-ui/themes";
 import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
 
 const PopoverWarp = ({ children, item, ...rest }: any) => {
   const router = useRouter();
+  console.log(item, "@@@##");
   return (
     <Popover.Root>
       <Popover.Trigger>
@@ -24,14 +26,16 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
         </div>
         <div>
           <Button
-            color="indigo"
             variant="soft"
             style={{ width: "100%" }}
-            onClick={() => {
-              router.push(`/detail/${item.tokenId}`);
-            }}
           >
-            View
+            <Link
+              href={{ pathname: `/detail/${item.tokenId}`, query: { currentItem: JSON.stringify(item) } }}
+              color="indigo"
+              style={{ width: "100%" }}
+            >
+              View
+            </Link>
           </Button>
         </div>
       </Popover.Content>

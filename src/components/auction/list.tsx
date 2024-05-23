@@ -96,7 +96,7 @@ export default function AuctionList() {
         >
           <div className="flex justify-between mb-5 mt-5">
             {list.map((e, i) => (
-              <PopoverWarp className="ml-2 mr-2" key={i}>
+              <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
                 <AuctionItem item={e} />
               </PopoverWarp>
             ))}
