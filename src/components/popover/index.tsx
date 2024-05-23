@@ -11,7 +11,7 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
   const setCurrentNFT = useStore((state:any) => state.setCurrentNFT);
   console.log(item, "@@@##");
   useEffect(() => {
-    setCurrentNFT(item);
+
   }, []);
 
   return (
@@ -39,6 +39,7 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
               href={{ pathname: `/detail/${item.tokenId}`, query: { currentItem: JSON.stringify(item) } }}
               color="indigo"
               style={{ width: "100%" }}
+              onClick={() => setCurrentNFT(item)}
             >
               View
             </Link>
