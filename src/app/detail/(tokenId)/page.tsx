@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import {
   Badge, Box, Text, Tabs, Button,
@@ -20,7 +20,6 @@ type Props = {
 
 const DetailPage = (props: Props) => {
   const CurrentNFT = StorageUtil.getLocalStorage("currentNFT");
-  const [CurrentTab, setCurrentTab] = useState("Info");
   return (
   // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
@@ -35,16 +34,8 @@ const DetailPage = (props: Props) => {
           />
         </div>
       </div>
-      <div className="w-[30%] h-[96.5%] my-[1%]  hover:shadow-2xl bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg shadow-xl rounded-lg p-5">
-        <Tabs.Root
-          defaultValue="Info"
-          value={CurrentTab}
-          className="w-full"
-          onValueChange={(value: string) => {
-            setCurrentTab(value);
-            console.log(value, "@@@@###");
-          }}
-        >
+      <div className="w-[30%] h-[95%] my-[1%]  hover:shadow-2xl bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg shadow-xl rounded-lg p-5">
+        <Tabs.Root defaultValue="Info" className="w-full">
           <Tabs.List className="flex space-x-2">
             <Tabs.Trigger
               value="Info"
@@ -134,16 +125,17 @@ const DetailPage = (props: Props) => {
                     />
                   </Form.Control>
                 </Form.Field>
-                <Text>
-                  Your Balance:
-                  <Strong>
-                    {1000}
-                    ETH
-                  </Strong>
-                </Text>
                 <Form.Submit asChild>
-                  <Button style={{ width: "100%", marginTop: "1rem" }}>Confirm</Button>
+                  <Button className="mb-1" style={{ width: "100%", marginBottom: "1rem" }}>Confirm</Button>
                 </Form.Submit>
+                <Text>
+                  Your Balanace:
+                  <strong>
+                    {10000}
+                    {" "}
+                    USDT
+                  </strong>
+                </Text>
               </Form.Root>
             </Tabs.Content>
 
@@ -152,20 +144,20 @@ const DetailPage = (props: Props) => {
                 <Text size="4" className="font-bold text-lg">Auction Detail</Text>
                 <div className="flex justify-between items-center w-full mb-4">
                   <div>
-                    <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
+                    <AvatarDiv iconAttr={{ width: 25, height: 25 }} />
                   </div>
                   <Text size="2" className="text-gray-700">98份正在拍卖, 起拍价1.2USDT, 来自0Xdddd</Text>
                 </div>
                 <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
-                    <div className="text-indigo-600">1.2 USDT</div>
+                  <div className="bg-gray-100 text-center font-bold p-2 rounded">
+                    <div className="text-blue-600">1.2 USDT</div>
                     <div>Lowest</div>
                   </div>
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+                  <div className="bg-gray-100 text-center font-bold p-2 rounded">
                     <div className="text-red-600">10%</div>
                     <div>Dividend</div>
                   </div>
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+                  <div className="bg-gray-100 text-center font-bold p-2 rounded">
                     <div className="text-green-600">0.3 USDT</div>
                     <div>Markup</div>
                   </div>
@@ -177,13 +169,13 @@ const DetailPage = (props: Props) => {
                   {Array.from({ length: 10 }).map((_, index) => (
                     <div key={index} className="w-full mb-2 flex items-center">
                       <div>
-                        <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
+                        <AvatarDiv iconAttr={{ width: 25, height: 25 }} />
                       </div>
                       <div className="ml-2">
                         <Text size="2" as="p">
                           出价
                           {" "}
-                          <Strong>1.2USDT</Strong>
+                          <Strong className="text-blue-600 font-bold">1.2USDT</Strong>
                         </Text>
                         <Text size="1" as="p" className="text-gray-500">
                           0xeeeeeee
@@ -196,19 +188,12 @@ const DetailPage = (props: Props) => {
               </div>
               <div className="mb-4">
                 <Text size="4" className="font-bold text-lg">Best Bid</Text>
-                <Text as="p" size="2" className="text-gray-500">Top Price from</Text>
-                <Text as="p" size="1" className="text-gray-700">0XEEEEEEEEEEEEEEEEEE</Text>
+                <Text as="p" size="2" className="text-gray-500 font-bold">Top Price from:</Text>
+                <Text as="p" size="1" className="">0XEEEEEEEEEEEEEEEEEE</Text>
                 <Text as="p" className="text-blue-600 font-bold">1.3 USDT</Text>
               </div>
               <div>
-                <Button
-                  style={{ width: "100%", marginBottom: "1rem" }}
-                  onClick={() => {
-                    setCurrentTab("Bid");
-                  }}
-                >
-                  Auction
-                </Button>
+                <Button style={{ width: "100%", marginBottom: "1rem" }}>Auction</Button>
               </div>
               <div>
                 <Text size="2" className="text-green-500 font-bold text-center" as="p">
