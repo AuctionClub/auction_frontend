@@ -5,6 +5,7 @@ import { Text, Button, Popover } from "@radix-ui/themes";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useStore from "@/store";
+import StorageUtil from "@/lib/storage";
 
 const PopoverWarp = ({ children, item, ...rest }: any) => {
   const router = useRouter();
@@ -36,10 +37,10 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
             style={{ width: "100%" }}
           >
             <Link
-              href={{ pathname: `/detail/${item.tokenId}`, query: { currentItem: JSON.stringify(item) } }}
+              href={{ pathname: `/detail/${item.tokenId}` }}
               color="indigo"
               style={{ width: "100%" }}
-              onClick={() => setCurrentNFT(item)}
+              onClick={() => StorageUtil.setLocalStorage("currentNFT", item)}
             >
               View
             </Link>

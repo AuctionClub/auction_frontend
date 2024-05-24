@@ -12,13 +12,14 @@ import useStore from "@/store";
 import * as Form from "@radix-ui/react-form";
 import * as Avatar from "@radix-ui/react-avatar";
 import AvatarDiv from "@/components/avatar";
+import StorageUtil from "@/lib/storage";
 
 type Props = {
 
 }
 
 const DetailPage = (props: Props) => {
-  const CurrentNFT = useStore((state:any) => state.CurrentNFT);
+  const CurrentNFT = StorageUtil.getLocalStorage("currentNFT");
   return (
   // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
