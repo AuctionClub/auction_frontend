@@ -21,8 +21,8 @@ const DetailPage = (props: Props) => {
   const CurrentNFT = useStore((state:any) => state.CurrentNFT);
   return (
   // TODO:跨页面数据传递
-    <div className="flex  h-[93vh] bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200">
-      <div className="w-4/5 flex justify-center items-center">
+    <div className="flex w-full h-[93vh] ">
+      <div className="w-[70%] flex justify-center items-center">
         <div className="p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl cursor-pointer">
           <Image
             src="https://i.seadn.io/s/raw/files/0bcb42f07224f4b66642aa7771d9a828.png?auto=format&dpr=1&w=1000"
@@ -33,8 +33,8 @@ const DetailPage = (props: Props) => {
           />
         </div>
       </div>
-      <div className="w-1/5 h-[95%] my-[1%] mr-[1%]  bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg shadow-xl rounded-lg p-5">
-        <Tabs.Root defaultValue="Info">
+      <div className="w-[30%] h-[95%] my-[1%]  hover:shadow-2xl bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg shadow-xl rounded-lg p-5">
+        <Tabs.Root defaultValue="Info" className="w-full">
           <Tabs.List className="flex space-x-2">
             <Tabs.Trigger
               value="Info"
@@ -132,7 +132,7 @@ const DetailPage = (props: Props) => {
 
             <Tabs.Content value="Auction">
               <div>
-                <Text size="5" className="font-bold text-lg">Auction Detail</Text>
+                <Text size="4" className="font-bold text-lg">Auction Detail</Text>
                 <div className="flex justify-between items-center w-full mb-4">
                   <div>
                     <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
@@ -155,7 +155,7 @@ const DetailPage = (props: Props) => {
                 </div>
               </div>
               <div className="mb-4">
-                <Text size="5" className="font-bold text-lg">Bid List</Text>
+                <Text size="4" className="font-bold text-lg">Bid List</Text>
                 <ScrollArea type="always" scrollbars="vertical" style={{ height: 180 }}>
                   {Array.from({ length: 10 }).map((_, index) => (
                     <div key={index} className="w-full mb-2 flex items-center">
@@ -178,13 +178,19 @@ const DetailPage = (props: Props) => {
                 </ScrollArea>
               </div>
               <div className="mb-4">
-                <Text size="5" className="font-bold text-lg">Best Bid</Text>
+                <Text size="4" className="font-bold text-lg">Best Bid</Text>
                 <Text as="p" size="2" className="text-gray-500">Top Price from</Text>
                 <Text as="p" size="1" className="text-gray-700">0XEEEEEEEEEEEEEEEEEE</Text>
                 <Text as="p" className="text-blue-600 font-bold">1.3 USDT</Text>
               </div>
               <div>
-                <Button style={{ width: "100%" }}>Auction</Button>
+                <Button style={{ width: "100%", marginBottom: "1rem" }}>Auction</Button>
+              </div>
+              <div>
+                <Text size="2" className="text-green-500 font-bold text-center" as="p">
+                  Deadline:
+                  {CurrentNFT.deadline}
+                </Text>
               </div>
             </Tabs.Content>
           </div>
