@@ -1,5 +1,6 @@
 import Image from "next/image";
 import bg_default from "/public/bg_default.png";
+import Link from "next/link";
 
 type CollectItemProps = {
   item: any;
@@ -7,7 +8,7 @@ type CollectItemProps = {
 
 export default function CollectItem({ item }: CollectItemProps) {
   return (
-    <div className="w-[250px] rounded-lg shadow-lg overflow-hidden mr-5 last:mr-0 cursor-pointer relative top-0 hover:-top-2 transition-[top] duration-100 ease-in">
+    <Link href={`collect/detail/${item.tokenId}`} className="w-[250px] rounded-lg shadow-lg overflow-hidden mr-5 last:mr-0 cursor-pointer relative top-0 hover:-top-2 transition-[top] duration-100 ease-in">
       <Image
         src={item.logoUrl || bg_default}
         width={250}
@@ -28,6 +29,6 @@ export default function CollectItem({ item }: CollectItemProps) {
           </div>
         </div> */}
       </div>
-    </div>
+    </Link>
   );
 }

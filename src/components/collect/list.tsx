@@ -11,7 +11,7 @@ import {
   useBalance,
   useReadContract,
 } from "wagmi";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function CollectList() {
   const account = useAccount();
@@ -36,7 +36,7 @@ export default function CollectList() {
   //     mintDate: '2024-05-03',
   //   },
   // ]
-  async function getData() {
+  const getData = useCallback(async () => {
     const res = await fetch(
       `https://www.oklink.com/api/v5/explorer/nft/address-balance-fills?chainShortName=SEPOLIA_TESTNET&address=${account.address}&protocolType=token_721&limit=100`,
       {
@@ -58,12 +58,12 @@ export default function CollectList() {
       const _list = data[0].tokenList;
       setList(_list);
     }
-  }
+  }, [account]);
   useEffect(() => {
     if (account.address) {
       getData();
     }
-  }, [account]);
+  }, [account, getData]);
   if (!list.length) return null;
   return (
     <div className="my-20 flex place-content-center relative">
