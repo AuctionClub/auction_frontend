@@ -36,7 +36,7 @@ const Page = () => {
         </div>
       ) : (
         <div className="h-full w-full text-center text-red-500 mt-[15%]">
-          <Heading>Please link wallet and switch to Sepolia...</Heading>
+          <Heading>Please connect wallet and switch to Sepolia...</Heading>
         </div>
       )}
     </>
