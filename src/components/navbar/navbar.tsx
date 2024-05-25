@@ -30,7 +30,7 @@ export const Navbar = () => {
             router.push("/");
           }}
         >
-          DIYAuction
+          AuctionClub
         </span>
         <div className=" flex justify-between items-center">
           <ConnectButton />

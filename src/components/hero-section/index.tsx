@@ -13,7 +13,7 @@ export default function HeroSection() {
             WebkitTextFillColor: "transparent",
           }}
         >
-          DIYAuction
+          AuctionClub
         </strong>
         <p className={cn("text-base md:text-2xl indent-8")}>
           Smart contract-based auction platform to provide a fair and reliable
