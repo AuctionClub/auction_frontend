@@ -4,6 +4,7 @@ const nextConfig = {
   reactStrictMode: false,
   output: "export",
   assetPrefix: isProd ? "https://diyauction.github.io/auction_frontend/" : "",
+  BASE_Path: isProd ? "/auction_frontend/" : "",
   images: {
     remotePatterns: [
       {
