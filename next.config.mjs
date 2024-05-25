@@ -19,6 +19,11 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
       },
+      {
+        protocol: "https",
+        hostname: "i.seadn.io",
+        pathname: "/s/raw/files/**",
+      },
     ],
   },
   typescript: {
