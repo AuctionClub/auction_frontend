@@ -6,6 +6,7 @@ const nextConfig = {
   assetPrefix: isProd ? "https://diyauction.github.io/auction_frontend/" : "",
   basePath: isProd ? "/auction_frontend" : "",
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
@@ -30,5 +31,5 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 };
-console.log(nextConfig, "@@@@@@@@@@@@##############");
+console.log(isProd, nextConfig, "@@@@@@@@@@@@##############");
 export default nextConfig;
