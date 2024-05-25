@@ -48,19 +48,19 @@ const DetailContainerPage = (props: Props) => {
           <Tabs.List className="flex space-x-2">
             <Tabs.Trigger
               value="Info"
-              className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded "
+              className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
             >
               Info
             </Tabs.Trigger>
             <Tabs.Trigger
               value="Bid"
-              className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded "
+              className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
             >
               Bid
             </Tabs.Trigger>
             <Tabs.Trigger
               value="Auction"
-              className="px-3 py-1.5 text-sm font-medium text-gray-600 bg-gray-100 rounded "
+              className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
             >
               Auction
             </Tabs.Trigger>
