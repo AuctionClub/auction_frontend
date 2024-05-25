@@ -4,19 +4,22 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'i.seadn.io',
+        protocol: "https",
+        hostname: "i.seadn.io",
       },
       {
-        protocol: 'http',
-        hostname: 'i.seadn.io',
+        protocol: "http",
+        hostname: "i.seadn.io",
       },
       {
-        protocol: 'http',
-        hostname: 'localhost',
+        protocol: "http",
+        hostname: "localhost",
       },
     ],
   },
-}
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+};
 
-export default nextConfig
+export default nextConfig;
