@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchJson } from "@/lib/fetchJson";
+import { useAccount } from "wagmi";
 
 interface Attribute {
   trait_type: string;
@@ -24,6 +25,7 @@ export interface NFTItem {
   deadline: string;
   name: string;
   description: string;
+  isOwner: boolean;
 }
 
 const fetchMetadata = async (url: string): Promise<Metadata> => fetchJson(url);
@@ -32,8 +34,11 @@ const useNFTs = (address: any) => {
   const [nfts, setNfts] = useState<NFTItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const account = useAccount();
 
   useEffect(() => {
+    const isOwner = address === account?.address;
+    console.log("isOwner:", isOwner);
     const fetchNFTs = async () => {
       try {
         const data = await fetchJson(`https://testnets-api.opensea.io/api/v2/chain/sepolia/account/${address.toString()}/nfts`);
@@ -51,6 +56,7 @@ const useNFTs = (address: any) => {
               deadline: "N/A", // Default deadline
               name: "Unknown", // Default name
               description: "No description available", // Default description
+              isOwner,
             };
           }
 
@@ -66,6 +72,7 @@ const useNFTs = (address: any) => {
             deadline: "N/A", // Default deadline
             name: metadata.name || "Unknown", // Fallback for missing name
             description: metadata.description || "No description available", // Fallback for missing description
+            isOwner,
           };
         });
 

@@ -3,10 +3,16 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import {
-  Badge, Box, Text, Tabs, Button,
-  Grid,
+  Badge,
+  Box,
+  Text,
+  Tabs,
+  Button,
+  Dialog,
   ScrollArea,
   Strong,
+  Flex,
+  TextField,
 } from "@radix-ui/themes";
 import useStore from "@/store";
 import * as Form from "@radix-ui/react-form";
@@ -14,16 +20,24 @@ import * as Avatar from "@radix-ui/react-avatar";
 import AvatarDiv from "@/components/avatar";
 import StorageUtil from "@/lib/storage";
 import { NFTItem } from "@/hooks/useNFT";
+import { Cross1Icon } from "@radix-ui/react-icons";
+import {
+  DateInput,
+  Input,
+  RadioGroup,
+  Radio,
+  Tabs as NTabs,
+  Tab as NTab,
+} from "@nextui-org/react";
 
-type Props = {
-
-}
+type Props = {};
 
 const DetailContainerPage = (props: Props) => {
-  const CurrentNFT:NFTItem = StorageUtil.getLocalStorage("currentNFT");
+  const CurrentNFT: NFTItem = StorageUtil.getLocalStorage("currentNFT");
   const [CurrentTab, setCurrentTab] = useState("Info");
+  const [selected, setSelected] = useState("login");
   return (
-  // TODO:跨页面数据传递
+    // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
       <div className="w-[70%] flex justify-center items-center">
         <div className="p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl cursor-pointer">
@@ -53,12 +67,15 @@ const DetailContainerPage = (props: Props) => {
             >
               Info
             </Tabs.Trigger>
-            <Tabs.Trigger
-              value="Bid"
-              className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
-            >
-              Bid
-            </Tabs.Trigger>
+            {!CurrentNFT.isOwner && (
+              <Tabs.Trigger
+                value="Bid"
+                className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
+              >
+                Bid
+              </Tabs.Trigger>
+            )}
+
             <Tabs.Trigger
               value="Auction"
               className="px-3 py-1.5 text-sm font-medium text-gray-600  rounded "
@@ -71,11 +88,15 @@ const DetailContainerPage = (props: Props) => {
             <Tabs.Content value="Info">
               <div className="text-gray-900 py-3">
                 <h1 className="text-3xl font-bold mb-2">{CurrentNFT.name}</h1>
-                <Text size="2" className="font-bold mb-2 text-gray-500" as="p">{CurrentNFT.description}</Text>
+                <Text size="2" className="font-bold mb-2 text-gray-500" as="p">
+                  {CurrentNFT.description}
+                </Text>
                 <p className="text-lg font-bold mb-2">
                   Final Price:
                   {" "}
-                  <span className="text-indigo-600">{CurrentNFT.currentBid}</span>
+                  <span className="text-indigo-600">
+                    {CurrentNFT.currentBid}
+                  </span>
                 </p>
                 <p className="text-lg font-bold mb-2">
                   Starting Price:
@@ -110,8 +131,13 @@ const DetailContainerPage = (props: Props) => {
               <Form.Root className="">
                 <Form.Field className="grid mb-4" name="bidPrice">
                   <div className="flex items-baseline justify-between">
-                    <Form.Label className="text-sm font-medium leading-8">Bid Price</Form.Label>
-                    <Form.Message className="text-xs text-gray-500" match="valueMissing">
+                    <Form.Label className="text-sm font-medium leading-8">
+                      Bid Price
+                    </Form.Label>
+                    <Form.Message
+                      className="text-xs text-gray-500"
+                      match="valueMissing"
+                    >
                       Please enter your Bid Price
                     </Form.Message>
                   </div>
@@ -124,8 +150,13 @@ const DetailContainerPage = (props: Props) => {
                 </Form.Field>
                 <Form.Field className="grid mb-4" name="count">
                   <div className="flex items-baseline justify-between">
-                    <Form.Label className="text-sm font-medium leading-8">Count</Form.Label>
-                    <Form.Message className="text-xs text-gray-500" match="valueMissing">
+                    <Form.Label className="text-sm font-medium leading-8">
+                      Count
+                    </Form.Label>
+                    <Form.Message
+                      className="text-xs text-gray-500"
+                      match="valueMissing"
+                    >
                       Please enter a count
                     </Form.Message>
                   </div>
@@ -144,19 +175,25 @@ const DetailContainerPage = (props: Props) => {
                   </Strong>
                 </Text>
                 <Form.Submit asChild>
-                  <Button style={{ width: "100%", marginTop: "1rem" }}>Confirm</Button>
+                  <Button style={{ width: "100%", marginTop: "1rem" }}>
+                    Confirm
+                  </Button>
                 </Form.Submit>
               </Form.Root>
             </Tabs.Content>
 
             <Tabs.Content value="Auction">
               <div>
-                <Text size="4" className="font-bold text-lg">Auction Detail</Text>
+                <Text size="4" className="font-bold text-lg">
+                  Auction Detail
+                </Text>
                 <div className="flex justify-between items-center w-full mb-4">
                   <div>
                     <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
                   </div>
-                  <Text size="2" className="text-gray-700">98份正在拍卖, 起拍价1.2USDT, 来自0Xdddd</Text>
+                  <Text size="2" className="text-gray-700">
+                    98份正在拍卖, 起拍价1.2USDT, 来自0Xdddd
+                  </Text>
                 </div>
                 <div className="grid grid-cols-3 gap-4 mb-4">
                   <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
@@ -174,8 +211,14 @@ const DetailContainerPage = (props: Props) => {
                 </div>
               </div>
               <div className="mb-4">
-                <Text size="4" className="font-bold text-lg">Bid List</Text>
-                <ScrollArea type="always" scrollbars="vertical" style={{ height: 180 }}>
+                <Text size="4" className="font-bold text-lg">
+                  Bid List
+                </Text>
+                <ScrollArea
+                  type="always"
+                  scrollbars="vertical"
+                  style={{ height: 180 }}
+                >
                   {Array.from({ length: 10 }).map((_, index) => (
                     <div key={index} className="w-full mb-2 flex items-center">
                       <div>
@@ -197,23 +240,77 @@ const DetailContainerPage = (props: Props) => {
                 </ScrollArea>
               </div>
               <div className="mb-4">
-                <Text size="4" className="font-bold text-lg">Best Bid</Text>
-                <Text as="p" size="2" className="text-gray-500">Top Price from</Text>
-                <Text as="p" size="1" className="text-gray-700">0XEEEEEEEEEEEEEEEEEE</Text>
-                <Text as="p" className="text-blue-600 font-bold">1.3 USDT</Text>
+                <Text size="4" className="font-bold text-lg">
+                  Best Bid
+                </Text>
+                <Text as="p" size="2" className="text-gray-500">
+                  Top Price from
+                </Text>
+                <Text as="p" size="1" className="text-gray-700">
+                  0XEEEEEEEEEEEEEEEEEE
+                </Text>
+                <Text as="p" className="text-blue-600 font-bold">
+                  1.3 USDT
+                </Text>
               </div>
+              <Dialog.Root>
+                <Dialog.Trigger>
+                  <Button style={{ width: "100%", marginBottom: "1rem" }}>
+                    Auction
+                  </Button>
+                </Dialog.Trigger>
+                <Dialog.Content maxWidth="380px" minHeight="600px">
+                  <Flex justify="between" align="center" className="mb-2">
+                    <span className="font-bold text-lg">{CurrentNFT.name}</span>
+
+                    <Dialog.Close>
+                      <Cross1Icon className="cursor-pointer" />
+                    </Dialog.Close>
+                  </Flex>
+                  <NTabs
+                    fullWidth
+                    size="md"
+                    aria-label="Tabs form"
+                    selectedKey={selected}
+                    onSelectionChange={setSelected}
+                  >
+
+                    <NTab key="british" title="British">
+                      <Input
+                        label="start price"
+                      />
+                      <DateInput
+                        granularity="second"
+                        label="start time"
+                        className="mt-2"
+                      />
+                      <Input label="interval" className="mt-2" />
+                    </NTab>
+                    <NTab key="dutch" title="Dutch">
+                      <Input label="start price" />
+                      <Input label="floor price" className="mt-2" />
+                      <Input label="reserve duration" className="mt-2" />
+                      <DateInput
+                        granularity="second"
+                        label="start time"
+                        className="mt-2"
+                      />
+                      <Input label="decay interval" className="mt-2" />
+                      <Input label="decay amount" className="mt-2" />
+                    </NTab>
+                  </NTabs>
+
+                  <Box className="w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer">
+                    submit auction
+                  </Box>
+                </Dialog.Content>
+              </Dialog.Root>
               <div>
-                <Button
-                  style={{ width: "100%", marginBottom: "1rem" }}
-                  onClick={() => {
-                    setCurrentTab("Bid");
-                  }}
+                <Text
+                  size="2"
+                  className="text-green-500 font-bold text-center"
+                  as="p"
                 >
-                  Auction
-                </Button>
-              </div>
-              <div>
-                <Text size="2" className="text-green-500 font-bold text-center" as="p">
                   Deadline:
                   {CurrentNFT.deadline}
                 </Text>
@@ -222,7 +319,6 @@ const DetailContainerPage = (props: Props) => {
           </div>
         </Tabs.Root>
       </div>
-
     </div>
   );
 };
