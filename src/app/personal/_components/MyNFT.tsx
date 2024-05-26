@@ -87,7 +87,7 @@ const MyNFT = () => {
 
   if (loading) {
     return (
-      <div className="h-full flex justify-center items-center">
+      <div className=" p-5 hover:shadow-lg shadow-md  flex-col h-full flex justify-center items-center">
         <Spinner size="3" />
         <Text size="2" className="text-gray-500 font-bold">loading...</Text>
       </div>
