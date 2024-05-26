@@ -38,7 +38,7 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
             style={{ width: "100%" }}
           >
             <Link
-              href={{ pathname: `/detail/${item.tokenId}` }}
+              href={{ pathname: "/detail/" }}
               color="indigo"
               style={{ width: "100%" }}
               onClick={() => StorageUtil.setLocalStorage("currentNFT", item)}

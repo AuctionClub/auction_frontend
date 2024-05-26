@@ -71,7 +71,7 @@ const DetailContainerPage = (props: Props) => {
             <Tabs.Content value="Info">
               <div className="text-gray-900 py-3">
                 <h1 className="text-3xl font-bold mb-2">{CurrentNFT.name}</h1>
-                <Text size="2" className="text-3xl font-bold mb-2 text-gray-500" as="p">{CurrentNFT.description}</Text>
+                <Text size="2" className="font-bold mb-2 text-gray-500" as="p">{CurrentNFT.description}</Text>
                 <p className="text-lg font-bold mb-2">
                   Final Price:
                   {" "}
@@ -97,7 +97,7 @@ const DetailContainerPage = (props: Props) => {
                       size="3"
                       color="indigo"
                       key={tag}
-                      className="text-lg font-bold mr-1"
+                      className="font-bold mr-1"
                     >
                       {tag}
                     </Badge>
