@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ScrollArea } from "@radix-ui/themes";
+import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/itemPersonal";
 import PopoverWarp from "@/components/popover";
@@ -84,10 +84,15 @@ const MyNFT = () => {
   ];
   const { nfts, loading, error } = useNFTs(account?.address);
   console.log(nfts);
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
+  if (loading) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <Spinner size="3" />
+        <Text size="2" className="text-gray-500 font-bold">loading...</Text>
+      </div>
+    );
+  }
   if (error) {
     return (
       <div>

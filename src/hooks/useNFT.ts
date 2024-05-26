@@ -60,7 +60,7 @@ const useNFTs = (address: any) => {
             contractAddress: nft.contract_address,
             img: metadata.image || "", // Fallback for missing image
             price: "N/A", // Default price
-            tags: metadata.attributes ? metadata.attributes.map((attr: Attribute) => `${attr.trait_type}:${attr.value}`) : [],
+            tags: metadata.attributes ? metadata.attributes.map((attr: Attribute) => `${attr.trait_type || "N/A"}:${attr.value || "N/A"}`) : [],
             currentBid: "N/A", // Default bid
             currentBidder: "N/A", // Default bidder
             deadline: "N/A", // Default deadline
