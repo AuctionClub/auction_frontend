@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { AllHTMLAttributes, useEffect } from "react";
 import { Text, Button, Popover } from "@radix-ui/themes";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import useStore from "@/store";
 import StorageUtil from "@/lib/storage";
+import { NFTItem } from "@/hooks/useNFT";
 
 const PopoverWarp = ({ children, item, ...rest }: any) => {
   const router = useRouter();
   const setCurrentNFT = useStore((state:any) => state.setCurrentNFT);
-  console.log(item, "@@@##");
+  console.log(item.tokenId, "@@@##");
   useEffect(() => {
 
   }, []);
