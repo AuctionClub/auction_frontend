@@ -31,7 +31,8 @@ import {
 } from "@nextui-org/react";
 import { parseDate, now, parseAbsoluteToLocal } from "@internationalized/date";
 import dayjs from "dayjs";
-import useAuction from "@/hooks/useAuction";
+import useWriteAuction from "@/hooks/useWriteAuction";
+import useReadAuction from "@/hooks/useReadAuction";
 
 type Props = {};
 
@@ -40,25 +41,41 @@ const DetailContainerPage = (props: Props) => {
   const [CurrentTab, setCurrentTab] = useState("Info");
   const [selected, setSelected] = useState("british");
   const [startPrice, setStartPrice] = React.useState("");
+  const [floorPrice, setFloorPrice] = React.useState("");
+  const [reserveDuration, setReserveDuration] = React.useState("");
   const [interval, setInterval] = React.useState("");
+  const [decayInterval, setDecayInterval] = React.useState("");
+  const [decayAmount, setDecayAmount] = React.useState("");
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
 
+  const { useReadIsOnAuction } = useReadAuction();
+
   const {
-    createBritish, isError, isPending, isSuccess, data, error, failureReason,
-  } = useAuction();
+    createBritish, createDutch, isError, isPending, isSuccess, data, error, failureReason,
+  } = useWriteAuction();
 
   useEffect(() => {
     console.log("合约写入状态", error, isError, isPending, isSuccess, failureReason);
   }, [
     isError, isPending, isSuccess, error, failureReason,
   ]);
+  const isOnAuctionData = useReadIsOnAuction([CurrentNFT.contractAddress, CurrentNFT.tokenId]);
+  useEffect(() => {
+    if (isOnAuctionData.isSuccess) {
+      console.log("isOnAuctionData：", isOnAuctionData.data);
+    }
+  }, [isOnAuctionData]);
 
   const submit = () => {
     const _startTime = dayjs(startTime.toDate()).unix();
-
-    const args = [startPrice, _startTime, CurrentNFT.contractAddress, CurrentNFT.tokenId, interval];
-    console.log("submit", args);
-    createBritish(args);
+    if (selected === "british") {
+      const args = [Number(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
+      createBritish(args);
+    } else {
+      const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(startPrice), Number(floorPrice), Number(_startTime), Number(decayInterval), Number(decayAmount), Number(reserveDuration)];
+      console.log("参数", args);
+      createDutch(args);
+    }
   };
   return (
     // TODO:跨页面数据传递
@@ -326,8 +343,19 @@ const DetailContainerPage = (props: Props) => {
                         value={startPrice}
                         onValueChange={setStartPrice}
                       />
-                      <Input label="floor price" className="mt-3" />
-                      <Input label="reserve duration" className="mt-3" />
+                      <Input
+                        value={floorPrice}
+                        onValueChange={setFloorPrice}
+                        label="floor price"
+                        className="mt-3"
+                      />
+                      <Input
+                        label="reserve duration"
+                        value={reserveDuration}
+                        onValueChange={setReserveDuration}
+                        className="mt-3"
+                        description="In seconds"
+                      />
                       <DateInput
                         granularity="second"
                         label="start time"
@@ -335,8 +363,18 @@ const DetailContainerPage = (props: Props) => {
                         value={startTime}
                         onChange={setStartTime}
                       />
-                      <Input label="decay interval" className="mt-3" />
-                      <Input label="decay amount" className="mt-3" />
+                      <Input
+                        value={decayInterval}
+                        onValueChange={setDecayInterval}
+                        label="decay interval"
+                        className="mt-3"
+                      />
+                      <Input
+                        value={decayAmount}
+                        onValueChange={setDecayAmount}
+                        label="decay amount"
+                        className="mt-3"
+                      />
                     </NTab>
                   </NTabs>
 
