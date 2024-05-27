@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Badge,
@@ -29,13 +29,37 @@ import {
   Tabs as NTabs,
   Tab as NTab,
 } from "@nextui-org/react";
+import { parseDate, now, parseAbsoluteToLocal } from "@internationalized/date";
+import dayjs from "dayjs";
+import useAuction from "@/hooks/useAuction";
 
 type Props = {};
 
 const DetailContainerPage = (props: Props) => {
   const CurrentNFT: NFTItem = StorageUtil.getLocalStorage("currentNFT");
   const [CurrentTab, setCurrentTab] = useState("Info");
-  const [selected, setSelected] = useState("login");
+  const [selected, setSelected] = useState("british");
+  const [startPrice, setStartPrice] = React.useState("");
+  const [interval, setInterval] = React.useState("");
+  const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
+
+  const {
+    createBritish, isError, isPending, isSuccess, data, error, failureReason,
+  } = useAuction();
+
+  useEffect(() => {
+    console.log("合约写入状态", error, isError, isPending, isSuccess, failureReason);
+  }, [
+    isError, isPending, isSuccess, error, failureReason,
+  ]);
+
+  const submit = () => {
+    const _startTime = dayjs(startTime.toDate()).unix();
+
+    const args = [startPrice, _startTime, CurrentNFT.contractAddress, CurrentNFT.tokenId, interval];
+    console.log("submit", args);
+    createBritish(args);
+  };
   return (
     // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
@@ -278,29 +302,45 @@ const DetailContainerPage = (props: Props) => {
                     <NTab key="british" title="British">
                       <Input
                         label="start price"
+                        value={startPrice}
+                        onValueChange={setStartPrice}
                       />
                       <DateInput
                         granularity="second"
                         label="start time"
-                        className="mt-2"
+                        className="mt-3"
+                        value={startTime}
+                        onChange={setStartTime}
                       />
-                      <Input label="interval" className="mt-2" />
+                      <Input
+                        label="interval"
+                        className="mt-3"
+                        value={interval}
+                        onValueChange={setInterval}
+                        description="In seconds"
+                      />
                     </NTab>
                     <NTab key="dutch" title="Dutch">
-                      <Input label="start price" />
-                      <Input label="floor price" className="mt-2" />
-                      <Input label="reserve duration" className="mt-2" />
+                      <Input
+                        label="start price"
+                        value={startPrice}
+                        onValueChange={setStartPrice}
+                      />
+                      <Input label="floor price" className="mt-3" />
+                      <Input label="reserve duration" className="mt-3" />
                       <DateInput
                         granularity="second"
                         label="start time"
-                        className="mt-2"
+                        className="mt-3"
+                        value={startTime}
+                        onChange={setStartTime}
                       />
-                      <Input label="decay interval" className="mt-2" />
-                      <Input label="decay amount" className="mt-2" />
+                      <Input label="decay interval" className="mt-3" />
+                      <Input label="decay amount" className="mt-3" />
                     </NTab>
                   </NTabs>
 
-                  <Box className="w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer">
+                  <Box onClick={() => submit()} className="w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer">
                     submit auction
                   </Box>
                 </Dialog.Content>

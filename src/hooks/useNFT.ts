@@ -47,7 +47,7 @@ const useNFTs = (address: any) => {
           if (!nft.metadata_url) {
             return {
               tokenId: nft.identifier,
-              contractAddress: nft.contract_address,
+              contractAddress: nft.contract,
               img: "", // Default value for missing image
               price: "N/A", // Default price
               tags: [], // Default tags
@@ -63,7 +63,7 @@ const useNFTs = (address: any) => {
           const metadata = await fetchMetadata(nft.metadata_url);
           return {
             tokenId: nft.identifier,
-            contractAddress: nft.contract_address,
+            contractAddress: nft.contract,
             img: metadata.image || "", // Fallback for missing image
             price: "N/A", // Default price
             tags: metadata.attributes ? metadata.attributes.map((attr: Attribute) => `${attr.trait_type || "N/A"}:${attr.value || "N/A"}`) : [],

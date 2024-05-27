@@ -23,6 +23,7 @@
     "ahooks": "^3.7.11",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.11",
     "eslint-config-airbnb": "^19.0.4",
     "framer-motion": "^11.2.6",
     "next": "14.1.4",
