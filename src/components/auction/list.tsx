@@ -1,9 +1,34 @@
+"use client";
+
 import { ScrollArea } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
+import useTheGraph from "@/hooks/useTheGraph";
 import PopoverWarp from "../popover";
 
 export default function AuctionList() {
+  const { data, loading, error } = useTheGraph({
+    url: "https://api.studio.thegraph.com/query/76625/auctionclub0/version/latest", query: `
+       {
+  auctionCancelleds(first: 5) {
+    id
+    auctionId
+    blockNumber
+    blockTimestamp
+  }
+  auctionCreateds(first: 5) {
+    id
+    auctionId
+    seller
+    startingPrice
+    _startTime
+    
+  }
+}
+       `,
+  });
+  console.log(data, loading, error);
+
   const list = [
     {
       tokenId: 1,
