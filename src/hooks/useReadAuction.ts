@@ -4,7 +4,7 @@ import { BritishAuctionAbi } from "@/constants/abi";
 const useReadAuction = () => {
   const useReadIsOnAuction = (args:Array<any>) => useReadContract({
     abi: BritishAuctionAbi,
-    address: "0x40A7F45CEE2698e9b5c9430099d63Ac7af341E63",
+    address: "0xB737c03093847DDd3E38BE07b12db65ED9fA5b63",
     functionName: "isOnAuction",
     args,
   });
