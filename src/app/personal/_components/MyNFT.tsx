@@ -5,7 +5,7 @@ import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/itemPersonal";
 import PopoverWarp from "@/components/popover";
-import useNFTs from "@/hooks/useNFT";
+import { useMyNFTs } from "@/hooks/useNFT";
 import { useAccount } from "wagmi";
 
 const MyNFT = () => {
@@ -82,7 +82,7 @@ const MyNFT = () => {
       deadline: "2024-01-01 00:00:00",
     },
   ];
-  const { nfts, loading, error } = useNFTs(account?.address);
+  const { nfts, loading, error } = useMyNFTs(account?.address);
   console.log(nfts);
 
   if (loading) {

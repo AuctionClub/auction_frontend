@@ -4,32 +4,88 @@ import { ScrollArea } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
 import useTheGraph from "@/hooks/useTheGraph";
+import { useNFTsBycontract, useAggregateNFTs } from "@/hooks/useNFT";
+import { useEffect, useState } from "react";
 import PopoverWarp from "../popover";
 
 export default function AuctionList() {
-  const { data, loading, error } = useTheGraph({
-    url: "https://api.studio.thegraph.com/query/76625/auctionclub0/version/latest", query: `
-       {
-  auctionCancelleds(first: 5) {
-    id
-    auctionId
-    blockNumber
-    blockTimestamp
-  }
-  auctionCreateds(first: 5) {
-    id
-    auctionId
-    seller
-    startingPrice
-    _startTime
-    
-  }
-}
-       `,
+  const { data: auctionData, loading: auctionLoading, error: auctionError } = useTheGraph({
+    url: "https://api.studio.thegraph.com/query/76625/auctionclub0/version/latest",
+    query: `
+    {
+      auctionCancelleds {
+        id
+        auctionId
+        blockNumber
+        blockTimestamp
+      }
+      highestBidIncreaseds{
+        id
+        bidder
+        amount
+        transactionHash
+      }
+      auctionCreateds{
+        id
+        auctionId
+        seller
+        startingPrice
+        _startTime
+        transactionHash
+      }
+    }
+    `,
   });
-  console.log(data, loading, error);
 
-  const list = [
+  const { nfts: openSeaNFTs, loading: openSeaLoading, error: openSeaError } = useNFTsBycontract("0xcef6df73404baeccdaa5986615233b0e7e442e2d");
+
+  const [aggregatedNFTs, setAggregatedNFTs] = useState([]);
+  const [aggregateLoading, setAggregateLoading] = useState(true);
+  const [aggregateError, setAggregateError] = useState(null);
+
+  useEffect(() => {
+    console.log(aggregateError, "dddd");
+
+    if (!auctionLoading && !openSeaLoading && auctionData && openSeaNFTs) {
+      try {
+        const aggregatedData:any = openSeaNFTs.map((nft) => {
+          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.auctionId === nft.tokenId);
+          return {
+            tokenId: parseInt(nft.tokenId.toString(), 10),
+            contractAddress: nft.contractAddress,
+            img: nft.img,
+            price: auction ? auction.startingPrice : nft.price,
+            tags: nft.tags,
+            currentBid: "N/A",
+            currentBidder: "N/A",
+            deadline: auction ? new Date(auction._startTime * 1000).toISOString() : nft.deadline,
+            name: nft.name,
+            description: nft.description,
+            isOwner: nft.isOwner,
+          };
+        });
+        setAggregatedNFTs(aggregatedData);
+      } catch (err:any) {
+        setAggregateError(err.message);
+      } finally {
+        setAggregateLoading(false);
+      }
+    }
+  }, [auctionLoading, openSeaLoading, auctionData, openSeaNFTs]);
+
+  if (auctionLoading || openSeaLoading || aggregateLoading) return <p>Loading...</p>;
+  if (auctionError || openSeaError || aggregateError) {
+    return (
+      <p>
+        Error:
+        {auctionError || openSeaError || aggregateError}
+      </p>
+    );
+  }
+
+  console.log(aggregatedNFTs, openSeaNFTs, auctionData, aggregateError, "``````````````````````````");
+
+  const list = aggregatedNFTs.length ? aggregatedNFTs : [
     {
       tokenId: 1,
       contractAddress: "0xxxx",

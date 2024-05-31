@@ -29,7 +29,7 @@ export default function AuctionItem({ item }: AuctionItemProps) {
             <span className="flex-1 truncate">{item.currentBidder}</span>
           </div>
         </div>
-        <p className="font-bold text-lg mb-1">NFT Name</p>
+        <p className="font-bold text-lg mb-1">{item.name}</p>
         <div className="text-xs">
           <div className="flex">
             <p>起拍价：</p>
