@@ -511,4 +511,3 @@ export const DutchAuctionAbi = [
     type: "function",
   },
 ];
-
