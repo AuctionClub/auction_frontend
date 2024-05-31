@@ -13,7 +13,7 @@ import {
   Strong,
   Flex,
   TextField,
-  Spinner
+  Spinner,
 } from "@radix-ui/themes";
 import useStore from "@/store";
 import * as Form from "@radix-ui/react-form";
@@ -34,9 +34,8 @@ import { parseDate, now, parseAbsoluteToLocal } from "@internationalized/date";
 import dayjs from "dayjs";
 import useWriteAuction from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
-import clsx from 'clsx';
-import { BaseError } from 'wagmi'
-
+import clsx from "clsx";
+import { BaseError } from "wagmi";
 
 type Props = {};
 
@@ -56,17 +55,16 @@ const DetailContainerPage = (props: Props) => {
 
   const { useReadIsOnAuction } = useReadAuction();
 
-
   const {
     createBritish, createDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
 
   useEffect(() => {
-    console.log('错误哦；',error?.message)
-    if(error?.message){
-      setErrMsg((error as BaseError).shortMessage || error?.message)
-    }else if(isSuccess){
-      setOpen(false)
+    console.log("错误哦；", error?.message);
+    if (error?.message) {
+      setErrMsg((error as BaseError).shortMessage || error?.message);
+    } else if (isSuccess) {
+      setOpen(false);
     }
   }, [
     isError, isPending, isSuccess, error, failureReason,
@@ -79,8 +77,8 @@ const DetailContainerPage = (props: Props) => {
   }, [isOnAuctionData]);
 
   const submit = () => {
-    if(isPending) return
-    setErrMsg('')
+    if (isPending) return;
+    setErrMsg("");
     const _startTime = dayjs(startTime.toDate()).unix();
     if (selected === "british") {
       const args = [Number(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
@@ -393,8 +391,9 @@ const DetailContainerPage = (props: Props) => {
                     </NTab>
                   </NTabs>
                   {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-                  <Flex justify='center' align='center' onClick={() => submit()} className={clsx('w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer',isPending && 'bg-[#ccc]')}>
-                    {isPending && <Spinner className="mr-2"/> }<Box>submit auction</Box>
+                  <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "bg-[#ccc]")}>
+                    {isPending && <Spinner className="mr-2" /> }
+                    <Box>submit auction</Box>
                   </Flex>
                 </Dialog.Content>
               </Dialog.Root>

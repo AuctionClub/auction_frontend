@@ -8,7 +8,7 @@ const useWriteAuction = () => {
   const createBritish = (args:Array<any>) => {
     writeContract({
       abi: BritishAuctionAbi,
-      address: "0xB737c03093847DDd3E38BE07b12db65ED9fA5b63",
+      address: "0x0a6E9E804f4777bdC2B5b1861f06E1920a1B110b",
       functionName: "createAuction",
       args,
     });
@@ -16,7 +16,7 @@ const useWriteAuction = () => {
   const createDutch = (args:Array<any>) => {
     writeContract({
       abi: DutchAuctionAbi,
-      address: "0xFEc409789F25B71298f62aAC3F1857BcF40ECF1f",
+      address: "0x6Fb69fF5D34456D4eF5e064f792f87037e4eBF6a",
       functionName: "startAuction",
       args,
     });
