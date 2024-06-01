@@ -418,7 +418,7 @@ const DetailContainerPage = () => {
       const a = formatUnits(getCurrentPrice.data as any, 0);
       //   const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
       setArgsobj({ value: a, args: formatUnits(auctionIdDutch as any, 0) });
-      console.log(res, "@@@@@");
+      //   console.log(res, "@@@@@");
       //   debugger;
 
       console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
