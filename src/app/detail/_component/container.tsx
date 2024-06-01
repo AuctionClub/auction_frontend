@@ -30,7 +30,7 @@ import dayjs from "dayjs";
 import useWriteAuction from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
-import { BaseError, useWatchContractEvent } from "wagmi";
+import { BaseError, useWatchContractEvent, useAccount } from "wagmi";
 import { parseEther, formatUnits } from "viem";
 import { britisConfig, dutchConfig } from "@/constants";
 
@@ -342,12 +342,13 @@ const DetailContainerPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
-
+  const account = useAccount();
   const {
     isOnAuction,
     isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionIdBritis, auctionIdDutch,
     auctionsInfoDutch,
-  } = useReadAuction(CurrentNFT);
+    balances,
+  } = useReadAuction(CurrentNFT, account.address);
   useWatchContractEvent({
     ...britisConfig,
     eventName: "AuctionCancelled",
@@ -396,15 +397,19 @@ const DetailContainerPage = () => {
     isError, isPending, isSuccess, error, failureReason,
   ]);
   const bidSubmit = () => {
-    if (!auctionIdDutch) return;
+    if (!auctionIdDutch && !auctionIdBritis) return;
     setErrMsg("");
     if (isOnAuctionBritish) {
-      bidBritish([auctionIdBritis, parseEther(bidPrice)]);
+      console.log("cansh", formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice));
+      bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
     } else if (isOnAuctionDutch) {
       const res = bidDutch([formatUnits(auctionIdDutch as any, 0)]);
-      console.log("竞拍结果", res);
+      console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
     }
   };
+  useEffect(() => {
+    setErrMsg("");
+  }, [selected]);
   const submit = () => {
     if (isPending) return;
     setErrMsg("");
@@ -559,7 +564,7 @@ const DetailContainerPage = () => {
                 {" "}
                 Your Balance:
                 <Strong>
-                  {1000}
+                  {balances}
                   ETH
                 </Strong>
               </Text>
@@ -574,7 +579,7 @@ const DetailContainerPage = () => {
               <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
               <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
 
-              { isOnAuctionBritish || isOnAuctionDutch ? (
+              {CurrentNFT.isOwner && (isOnAuctionBritish || isOnAuctionDutch ? (
                 <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
                   {isPending && <Spinner className="mr-2" /> }
                   {" "}
@@ -671,7 +676,7 @@ const DetailContainerPage = () => {
                     </Flex>
                   </Dialog.Content>
                 </Dialog.Root>
-              )}
+              ))}
 
               {/* <div>
                 <Text
