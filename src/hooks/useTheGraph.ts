@@ -8,7 +8,7 @@ type Props = {
     query: string;
 };
 
-const useTheGraph = ({ url, query }:Props) => {
+export const useTheGraph = ({ url, query }:Props) => {
   const {
     data, loading, error, postData,
   } = usePostRequest(
@@ -30,5 +30,3 @@ const useTheGraph = ({ url, query }:Props) => {
   }, []);
   return { data, loading, error };
 };
-
-export default useTheGraph;
