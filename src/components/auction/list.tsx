@@ -1,6 +1,6 @@
 "use client";
 
-import { ScrollArea } from "@radix-ui/themes";
+import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
 import useTheGraph from "@/hooks/useTheGraph";
@@ -49,7 +49,7 @@ export default function AuctionList() {
     if (!auctionLoading && !openSeaLoading && auctionData && openSeaNFTs) {
       try {
         const aggregatedData:any = openSeaNFTs.map((nft) => {
-          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.auctionId === nft.tokenId);
+          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.id === nft.identifier);
           return {
             tokenId: parseInt(nft.tokenId.toString(), 10),
             contractAddress: nft.contractAddress,
@@ -73,7 +73,15 @@ export default function AuctionList() {
     }
   }, [auctionLoading, openSeaLoading, auctionData, openSeaNFTs]);
 
-  if (auctionLoading || openSeaLoading || aggregateLoading) return <p>Loading...</p>;
+  if (auctionLoading || openSeaLoading || aggregateLoading) {
+    return (
+      <div className=" p-5 hover:shadow-lg shadow-md  flex-col h-full flex justify-center items-center">
+        <Spinner size="3" />
+        <Text size="2" className="text-gray-500 font-bold">loading...</Text>
+      </div>
+    );
+  }
+
   if (auctionError || openSeaError || aggregateError) {
     return (
       <p>
