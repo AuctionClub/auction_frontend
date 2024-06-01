@@ -1,5 +1,5 @@
 import { useReadContract, useReadContracts, useWatchContractEvent } from "wagmi";
-import { formatEther, formatUnits } from "viem";
+import { Address, formatEther, formatUnits } from "viem";
 import {
   useEffect,
   useMemo,
@@ -8,7 +8,7 @@ import {
 import { NFTItem } from "@/hooks/useNFT";
 import { britisConfig, dutchConfig } from "@/constants";
 
-const useReadAuction = (CurrentNFT:NFTItem) => {
+const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
   const isOnAuction = useReadContracts({
     contracts: [
       {
@@ -112,6 +112,22 @@ const useReadAuction = (CurrentNFT:NFTItem) => {
     [auctionsInfoBritisData, auctionsInfoDutchData],
   );
 
+  const balancesData = useReadContract({
+    ...dutchConfig,
+    functionName: "balances",
+    args: [address],
+    query: {
+      enabled: !!address,
+    },
+  });
+  const balances = useMemo(() => {
+    let _balances = "0";
+    if (balancesData.isSuccess) {
+      _balances = formatEther(balancesData.data as any);
+    }
+    return _balances;
+  }, [balancesData]);
+
   return {
     isOnAuctionBritish,
     isOnAuctionDutch,
@@ -120,6 +136,7 @@ const useReadAuction = (CurrentNFT:NFTItem) => {
     auctionIdBritis,
     auctionIdDutch,
     isOnAuction,
+    balances,
   };
 };
 
