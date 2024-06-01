@@ -37,8 +37,11 @@ interface InfoProps{
   isOnAuctionBritish: boolean;
   isOnAuctionDutch: boolean;
   auctionsInfoBritis:any;
+  auctionsInfoDutch:any;
 }
-const Info = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis }:InfoProps) => {
+const Info = ({
+  isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
+}:InfoProps) => {
   if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
   if (isOnAuctionBritish) {
     return (
@@ -85,9 +88,92 @@ const Info = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis }:InfoP
       </>
     );
   }
-  return null;
+  return (
+    <>
+      <p className="text-lg font-bold mb-2">
+        final price:
+        {" "}
+        <span className="text-indigo-600">
+          N/A
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        starting price:
+        {" "}
+        <span className="text-indigo-600">
+          {auctionsInfoDutch.startingPrice}
+          {" "}
+          ETH
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        floor price:
+        {" "}
+        <span className="text-indigo-600">
+          {auctionsInfoDutch.reservePrice}
+          {" "}
+          ETH
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        price decay interval:
+        {" "}
+        <span className="text-indigo-600">
+          {auctionsInfoDutch.price_decay_interval}
+          {" "}
+          s
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        price decay amount:
+        {" "}
+        <span className="text-indigo-600">
+          {auctionsInfoDutch.price_decay_amount}
+          {" "}
+          ETH
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        reserve duration:
+        {" "}
+        <span className="text-indigo-600">
+          {auctionsInfoDutch.reserve_duration}
+          {" "}
+          s
+        </span>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        start time:
+        {" "}
+        <Badge size="3" color="orange">
+          {dayjs(auctionsInfoDutch.startTime * 1000).format("YYYY-MM-DD HH:mm")}
+        </Badge>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        Deadline:
+        {" "}
+        <Badge size="3" color="orange">
+          {dayjs(auctionsInfoDutch.endTime * 1000).format("YYYY-MM-DD HH:mm")}
+          {/* {Number(auctionsInfoDutch.endTime) || "N/A"} */}
+        </Badge>
+      </p>
+      <p className="text-lg font-bold mb-2">
+        Auction Type:
+        {" "}
+        <Badge
+          size="3"
+          color="indigo"
+          className="font-bold mr-1"
+        >
+          Dutch
+        </Badge>
+      </p>
+    </>
+  );
 };
-const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis }:InfoProps) => {
+const AuctionPanel = ({
+  isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
+}:InfoProps) => {
   if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
   if (isOnAuctionBritish) {
     return (
@@ -100,19 +186,19 @@ const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis
             <Box className="text-gray-700">
               起拍价:
               {" "}
-              {auctionsInfoBritis.currentHighestBid}
+              {auctionsInfoBritis.startingPrice}
               {" "}
               ETH
             </Box>
-            <Box className="text-gray-700 truncate overflow-hidden">
+            {/* <Box className="text-gray-700 truncate overflow-hidden">
               来自:
               {" "}
               {auctionsInfoBritis.currentHighestBidder}
-            </Box>
+            </Box> */}
           </Box>
         </div>
         <div className="flex justify-around mb-4">
-          <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+          <div className="bg-gray-100 text-center  p-2 rounded shadow-md hover:shadow-lg">
             <div className="text-indigo-600">
               {" "}
               {auctionsInfoBritis.currentHighestBid}
@@ -121,11 +207,11 @@ const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis
             </div>
             <div>Lowest</div>
           </div>
-          {/* <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+          {/* <div className="bg-gray-100 text-center  p-2 rounded shadow-md hover:shadow-lg">
             <div className="text-red-600">10%</div>
             <div>Dividend</div>
           </div> */}
-          <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+          <div className="bg-gray-100 text-center  p-2 rounded shadow-md hover:shadow-lg">
             <div className="text-green-600">
               {" "}
               {auctionsInfoBritis.totalBidAmount}
@@ -136,7 +222,7 @@ const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis
           </div>
         </div>
         <div className="mb-4">
-          <Text size="4" className="font-bold text-lg">
+          <Text size="4" className=" text-lg">
             Best Bid
           </Text>
           <Text as="p" size="2" className="text-gray-500">
@@ -145,14 +231,14 @@ const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis
           <Text as="p" size="1" className="text-gray-700">
             {auctionsInfoBritis.currentHighestBidder}
           </Text>
-          <Text as="p" className="text-blue-600 font-bold">
+          <Text as="p" className="text-blue-600 ">
             {auctionsInfoBritis.currentHighestBid}
             {" "}
             ETH
           </Text>
         </div>
         {/* <div className="mb-4">
-          <Text size="4" className="font-bold text-lg">
+          <Text size="4" className=" text-lg">
             Bid List
           </Text>
           <ScrollArea
@@ -183,7 +269,62 @@ const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis
       </>
     );
   }
-  return null;
+  return (
+    <>
+      <div className="flex justify-between items-center w-full mb-4">
+        <div>
+          <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
+        </div>
+        <Box className="flex-1 overflow-hidden">
+          <Box className="text-gray-700">
+            起拍价:
+            {" "}
+            {auctionsInfoDutch.startingPrice}
+            {" "}
+            ETH
+          </Box>
+          {/* <Box className="text-gray-700 truncate overflow-hidden">
+            来自:
+            {" "}
+            {auctionsInfoDutch.currentHighestBidder}
+          </Box> */}
+        </Box>
+      </div>
+      <div className="flex justify-around mb-4">
+        <div className="bg-gray-100 text-center p-2 rounded shadow-md hover:shadow-lg">
+          <div className="text-indigo-600">
+            {" "}
+            {auctionsInfoDutch.startingPrice}
+            {" "}
+            ETH
+          </div>
+          <div>current</div>
+        </div>
+        {/* <div className="bg-gray-100 text-center p-2 rounded shadow-md hover:shadow-lg">
+            <div className="text-red-600">10%</div>
+            <div>Dividend</div>
+          </div> */}
+        <div className="bg-gray-100 text-center p-2 rounded shadow-md hover:shadow-lg">
+          <div className="text-green-600">
+            {" "}
+            {auctionsInfoDutch.price_decay_amount}
+            {" "}
+            ETH
+          </div>
+          <div>decay amount</div>
+        </div>
+        <div className="bg-gray-100 text-center p-2 rounded shadow-md hover:shadow-lg">
+          <div className="text-green-600">
+            {" "}
+            {auctionsInfoDutch.price_decay_interval}
+            {" "}
+            ETH
+          </div>
+          <div>decay interval</div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 const DetailContainerPage = () => {
@@ -200,10 +341,13 @@ const DetailContainerPage = () => {
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
 
-  const { isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis } = useReadAuction(CurrentNFT);
+  const {
+    isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionIdBritis, auctionIdDutch,
+    auctionsInfoDutch,
+  } = useReadAuction(CurrentNFT);
 
   const {
-    createBritish, createDutch, isError, isPending, isSuccess, data, error, failureReason,
+    createBritish, createDutch, bidBritish, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
 
   useEffect(() => {
@@ -215,7 +359,11 @@ const DetailContainerPage = () => {
   }, [
     isError, isPending, isSuccess, error, failureReason,
   ]);
-
+  const bidSubmit = (event:any) => {
+    const _data = Object.fromEntries(new FormData(event.currentTarget));
+    console.log("看下数据", _data);
+    event.preventDefault();
+  };
   const submit = () => {
     if (isPending) return;
     setErrMsg("");
@@ -225,10 +373,17 @@ const DetailContainerPage = () => {
       createBritish(args);
     } else {
       const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
+      // console.log("看下参数", args);
       createDutch(args);
     }
   };
+  const cancelAution = () => {
+    if (isOnAuctionBritish) {
 
+    } else if (isOnAuctionDutch) {
+
+    }
+  };
   return (
     // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
@@ -283,32 +438,50 @@ const DetailContainerPage = () => {
                 <Text size="2" className="font-bold mb-2 text-gray-500" as="p">
                   {CurrentNFT.description}
                 </Text>
-                <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} />
+                <p className="text-lg font-bold mb-2">
+                  Auction Type:
+                  {" "}
+                  {CurrentNFT.tags.map((tag) => (
+                    <Badge
+                      size="3"
+                      color="indigo"
+                      key={tag}
+                      className="font-bold mr-1"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </p>
+
               </div>
             </Tabs.Content>
 
             <Tabs.Content value="Bid">
-              <Form.Root className="">
-                <Form.Field className="grid mb-4" name="bidPrice">
-                  <div className="flex items-baseline justify-between">
-                    <Form.Label className="text-sm font-medium leading-8">
-                      Bid Price
-                    </Form.Label>
-                    <Form.Message
-                      className="text-xs text-gray-500"
-                      match="valueMissing"
-                    >
-                      Please enter your Bid Price
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <input
-                      className="w-full bg-white shadow-sm rounded px-3 py-2 text-sm leading-none outline-none focus:ring-2 focus:ring-indigo-600"
-                      required
-                    />
-                  </Form.Control>
-                </Form.Field>
-                <Form.Field className="grid mb-4" name="count">
+              <Form.Root onSubmit={(event) => bidSubmit(event)}>
+                {
+                  isOnAuctionBritish && (
+                  <Form.Field className="grid mb-4" name="bidPrice">
+                    <div className="flex items-baseline justify-between">
+                      <Form.Label className="text-sm font-medium leading-8">
+                        Bid Price
+                      </Form.Label>
+                      <Form.Message
+                        className="text-xs text-gray-500"
+                        match="valueMissing"
+                      >
+                        Please enter your Bid Price
+                      </Form.Message>
+                    </div>
+                    <Form.Control asChild>
+                      <input
+                        className="w-full bg-white shadow-sm rounded px-3 py-2 text-sm leading-none outline-none focus:ring-2 focus:ring-indigo-600"
+                        required
+                      />
+                    </Form.Control>
+                  </Form.Field>
+                  )
+                }
+                {/* <Form.Field className="grid mb-4" name="count">
                   <div className="flex items-baseline justify-between">
                     <Form.Label className="text-sm font-medium leading-8">
                       Count
@@ -326,7 +499,7 @@ const DetailContainerPage = () => {
                       required
                     />
                   </Form.Control>
-                </Form.Field>
+                </Form.Field> */}
                 <Text>
                   Your Balance:
                   <Strong>
@@ -335,22 +508,21 @@ const DetailContainerPage = () => {
                   </Strong>
                 </Text>
                 <Form.Submit asChild>
-                  <Button style={{ width: "100%", marginTop: "1rem" }}>
-                    Confirm
+                  <Button style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
+                    {isPending && <Spinner className="mr-2" /> }
+                    <Box>Confirm</Box>
                   </Button>
                 </Form.Submit>
               </Form.Root>
             </Tabs.Content>
 
             <Tabs.Content value="Auction">
-              <Text size="4" className="font-bold text-lg">
-                Auction Detail
-              </Text>
-              <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} />
+              <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
+              <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
 
               { isOnAuctionBritish || isOnAuctionDutch ? (
-                <Button className="!bg-[#ccc]" style={{ width: "100%", marginBottom: "1rem" }}>
-                  Under auction
+                <Button onClick={() => cancelAution()} style={{ width: "100%", marginBottom: "1rem" }}>
+                  cancel auction
                 </Button>
               ) : (
                 <Dialog.Root open={open} onOpenChange={setOpen}>

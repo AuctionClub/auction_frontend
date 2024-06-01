@@ -50,6 +50,18 @@ export const BritishAuctionAbi = [
         name: "_startTime",
         type: "uint256",
       },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "nftAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
     name: "AuctionCreated",
     type: "event",
@@ -282,7 +294,6 @@ export const BritishAuctionAbi = [
   },
   { stateMutability: "payable", type: "receive" },
 ];
-
 export const DutchAuctionAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
@@ -371,6 +382,12 @@ export const DutchAuctionAbi = [
         internalType: "uint256",
         name: "startTime",
         type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "nftAddress",
+        type: "address",
       },
     ],
     name: "AuctionStarted",
