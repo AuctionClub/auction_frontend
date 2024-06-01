@@ -3,7 +3,7 @@
 import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
-import { useTheGraph, useTheGraphDutch } from "@/hooks/useTheGraph";
+import { useTheGraph } from "@/hooks/useTheGraph";
 import { useNFTsBycontract, useAggregateNFTs } from "@/hooks/useNFT";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
