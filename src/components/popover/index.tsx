@@ -22,7 +22,7 @@ const PopoverWarp = ({ children, item, ...rest }: any) => {
         <div {...rest}>{children}</div>
       </Popover.Trigger>
 
-      <Popover.Content size="2">
+      <Popover.Content size="1">
         <div>
           <Button
             color="indigo"

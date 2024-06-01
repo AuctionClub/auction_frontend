@@ -149,6 +149,16 @@ export const BritishAuctionAbi = [
     type: "event",
   },
   {
+    inputs: [
+      { internalType: "address", name: "nftAddress", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "auctionIdQuery",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "auctions",
     outputs: [
@@ -272,6 +282,7 @@ export const BritishAuctionAbi = [
   },
   { stateMutability: "payable", type: "receive" },
 ];
+
 export const DutchAuctionAbi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
@@ -399,6 +410,16 @@ export const DutchAuctionAbi = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "address", name: "nftAddress", type: "address" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
+    ],
+    name: "auctionIdQuery",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "auctions",
     outputs: [
@@ -429,7 +450,7 @@ export const DutchAuctionAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "bytes", name: "checkData", type: "bytes" }],
+    inputs: [{ internalType: "bytes", name: "", type: "bytes" }],
     name: "checkUpkeep",
     outputs: [
       { internalType: "bool", name: "upkeepNeeded", type: "bool" },
@@ -511,4 +532,3 @@ export const DutchAuctionAbi = [
     type: "function",
   },
 ];
-

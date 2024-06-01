@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { LapTimerIcon } from "@radix-ui/react-icons";
+import StorageUtil from "@/lib/storage";
+import Link from "next/link";
 
 type AuctionItemProps = {
   item: any;
@@ -7,7 +9,7 @@ type AuctionItemProps = {
 
 export default function AuctionItem({ item }: AuctionItemProps) {
   return (
-    <div className="w-[250px] rounded-lg shadow-lg overflow-hidden mr-5 last:mr-0 cursor-pointer relative top-0 hover:-top-2 transition-[top] duration-100 ease-in">
+    <Link onClick={() => StorageUtil.setLocalStorage("currentNFT", item)} href={{ pathname: "/detail/" }} className="w-[250px] rounded-lg shadow-lg overflow-hidden mr-5 last:mr-0 cursor-pointer relative top-0 hover:-top-2 transition-[top] duration-100 ease-in">
       <Image
         src={item.img}
         width={250}
@@ -41,6 +43,6 @@ export default function AuctionItem({ item }: AuctionItemProps) {
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

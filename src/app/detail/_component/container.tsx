@@ -12,12 +12,9 @@ import {
   ScrollArea,
   Strong,
   Flex,
-  TextField,
   Spinner,
 } from "@radix-ui/themes";
-import useStore from "@/store";
 import * as Form from "@radix-ui/react-form";
-import * as Avatar from "@radix-ui/react-avatar";
 import AvatarDiv from "@/components/avatar";
 import StorageUtil from "@/lib/storage";
 import { NFTItem } from "@/hooks/useNFT";
@@ -25,42 +22,191 @@ import { Cross1Icon } from "@radix-ui/react-icons";
 import {
   DateInput,
   Input,
-  RadioGroup,
-  Radio,
   Tabs as NTabs,
   Tab as NTab,
 } from "@nextui-org/react";
-import { parseDate, now, parseAbsoluteToLocal } from "@internationalized/date";
+import { parseAbsoluteToLocal } from "@internationalized/date";
 import dayjs from "dayjs";
 import useWriteAuction from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
 import { BaseError } from "wagmi";
+import { parseEther } from "viem";
 
-type Props = {};
+interface InfoProps{
+  isOnAuctionBritish: boolean;
+  isOnAuctionDutch: boolean;
+  auctionsInfoBritis:any;
+}
+const Info = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis }:InfoProps) => {
+  if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
+  if (isOnAuctionBritish) {
+    return (
+      <>
+        <p className="text-lg font-bold mb-2">
+          Final Price:
+          {" "}
+          <span className="text-indigo-600">
+            N/A
+          </span>
+        </p>
+        <p className="text-lg font-bold mb-2">
+          Starting Price:
+          {" "}
+          <span className="text-indigo-600">
+            {auctionsInfoBritis.startingPrice}
+          </span>
+        </p>
+        <p className="text-lg font-bold mb-2">
+          start time:
+          {" "}
+          <Badge size="3" color="orange">
+            {dayjs(auctionsInfoBritis.startTime * 1000).format("YYYY-MM-DD HH:mm")}
+          </Badge>
+        </p>
+        <p className="text-lg font-bold mb-2">
+          Deadline:
+          {" "}
+          <Badge size="3" color="orange">
+            {Number(auctionsInfoBritis.endTime) || "N/A"}
+          </Badge>
+        </p>
+        <p className="text-lg font-bold mb-2">
+          Auction Type:
+          {" "}
+          <Badge
+            size="3"
+            color="indigo"
+            className="font-bold mr-1"
+          >
+            British
+          </Badge>
+        </p>
+      </>
+    );
+  }
+  return null;
+};
+const AuctionPanel = ({ isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis }:InfoProps) => {
+  if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
+  if (isOnAuctionBritish) {
+    return (
+      <>
+        <div className="flex justify-between items-center w-full mb-4">
+          <div>
+            <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
+          </div>
+          <Box className="flex-1 overflow-hidden">
+            <Box className="text-gray-700">
+              起拍价:
+              {" "}
+              {auctionsInfoBritis.currentHighestBid}
+              {" "}
+              ETH
+            </Box>
+            <Box className="text-gray-700 truncate overflow-hidden">
+              来自:
+              {" "}
+              {auctionsInfoBritis.currentHighestBidder}
+            </Box>
+          </Box>
+        </div>
+        <div className="flex justify-around mb-4">
+          <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+            <div className="text-indigo-600">
+              {" "}
+              {auctionsInfoBritis.currentHighestBid}
+              {" "}
+              ETH
+            </div>
+            <div>Lowest</div>
+          </div>
+          {/* <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+            <div className="text-red-600">10%</div>
+            <div>Dividend</div>
+          </div> */}
+          <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
+            <div className="text-green-600">
+              {" "}
+              {auctionsInfoBritis.totalBidAmount}
+              {" "}
+              ETH
+            </div>
+            <div>Markup</div>
+          </div>
+        </div>
+        <div className="mb-4">
+          <Text size="4" className="font-bold text-lg">
+            Best Bid
+          </Text>
+          <Text as="p" size="2" className="text-gray-500">
+            Top Price from
+          </Text>
+          <Text as="p" size="1" className="text-gray-700">
+            {auctionsInfoBritis.currentHighestBidder}
+          </Text>
+          <Text as="p" className="text-blue-600 font-bold">
+            {auctionsInfoBritis.currentHighestBid}
+            {" "}
+            ETH
+          </Text>
+        </div>
+        {/* <div className="mb-4">
+          <Text size="4" className="font-bold text-lg">
+            Bid List
+          </Text>
+          <ScrollArea
+            type="always"
+            scrollbars="vertical"
+            style={{ height: 180 }}
+          >
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className="w-full mb-2 flex items-center">
+                <div>
+                  <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
+                </div>
+                <div className="ml-2">
+                  <Text size="2" as="p">
+                    出价
+                    {" "}
+                    <Strong>1.2USDT</Strong>
+                  </Text>
+                  <Text size="1" as="p" className="text-gray-500">
+                    0xeeeeeee
+                    {`${index}`}
+                  </Text>
+                </div>
+              </div>
+            ))}
+          </ScrollArea>
+        </div> */}
+      </>
+    );
+  }
+  return null;
+};
 
-const DetailContainerPage = (props: Props) => {
+const DetailContainerPage = () => {
   const CurrentNFT: NFTItem = StorageUtil.getLocalStorage("currentNFT");
   const [CurrentTab, setCurrentTab] = useState("Info");
   const [selected, setSelected] = useState("british");
-  const [startPrice, setStartPrice] = React.useState("");
-  const [floorPrice, setFloorPrice] = React.useState("");
-  const [reserveDuration, setReserveDuration] = React.useState("");
-  const [interval, setInterval] = React.useState("");
-  const [decayInterval, setDecayInterval] = React.useState("");
-  const [decayAmount, setDecayAmount] = React.useState("");
-  const [errMsg, setErrMsg] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const [startPrice, setStartPrice] = useState("");
+  const [floorPrice, setFloorPrice] = useState("");
+  const [reserveDuration, setReserveDuration] = useState("");
+  const [interval, setInterval] = useState("");
+  const [decayInterval, setDecayInterval] = useState("");
+  const [decayAmount, setDecayAmount] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+  const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
 
-  const { useReadIsOnAuction } = useReadAuction();
+  const { isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis } = useReadAuction(CurrentNFT);
 
   const {
     createBritish, createDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
 
   useEffect(() => {
-    console.log("错误哦；", error?.message);
     if (error?.message) {
       setErrMsg((error as BaseError).shortMessage || error?.message);
     } else if (isSuccess) {
@@ -69,27 +215,20 @@ const DetailContainerPage = (props: Props) => {
   }, [
     isError, isPending, isSuccess, error, failureReason,
   ]);
-  const isOnAuctionData = useReadIsOnAuction([CurrentNFT.contractAddress, CurrentNFT.tokenId]);
-  useEffect(() => {
-    if (isOnAuctionData.isSuccess) {
-      console.log("isOnAuctionData：", isOnAuctionData.data);
-    }
-  }, [isOnAuctionData]);
 
   const submit = () => {
     if (isPending) return;
     setErrMsg("");
     const _startTime = dayjs(startTime.toDate()).unix();
     if (selected === "british") {
-      const args = [Number(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
-      console.log("参数11", args);
+      const args = [parseEther(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
       createBritish(args);
     } else {
-      const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(startPrice), Number(floorPrice), Number(_startTime), Number(decayInterval), Number(decayAmount), Number(reserveDuration)];
-      console.log("参数", args);
+      const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
       createDutch(args);
     }
   };
+
   return (
     // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
@@ -111,7 +250,6 @@ const DetailContainerPage = (props: Props) => {
           className="w-full"
           onValueChange={(value: string) => {
             setCurrentTab(value);
-            console.log(value, "@@@@###");
           }}
         >
           <Tabs.List className="flex space-x-2">
@@ -145,39 +283,7 @@ const DetailContainerPage = (props: Props) => {
                 <Text size="2" className="font-bold mb-2 text-gray-500" as="p">
                   {CurrentNFT.description}
                 </Text>
-                <p className="text-lg font-bold mb-2">
-                  Final Price:
-                  {" "}
-                  <span className="text-indigo-600">
-                    {CurrentNFT.currentBid}
-                  </span>
-                </p>
-                <p className="text-lg font-bold mb-2">
-                  Starting Price:
-                  {" "}
-                  <span className="text-indigo-600">{CurrentNFT.price}</span>
-                </p>
-                <p className="text-lg font-bold mb-2">
-                  Deadline:
-                  {" "}
-                  <Badge size="3" color="orange">
-                    {CurrentNFT.deadline}
-                  </Badge>
-                </p>
-                <p className="text-lg font-bold mb-2">
-                  Auction Type:
-                  {" "}
-                  {CurrentNFT.tags.map((tag) => (
-                    <Badge
-                      size="3"
-                      color="indigo"
-                      key={tag}
-                      className="font-bold mr-1"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </p>
+                <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} />
               </div>
             </Tabs.Content>
 
@@ -237,167 +343,109 @@ const DetailContainerPage = (props: Props) => {
             </Tabs.Content>
 
             <Tabs.Content value="Auction">
-              <div>
-                <Text size="4" className="font-bold text-lg">
-                  Auction Detail
-                </Text>
-                <div className="flex justify-between items-center w-full mb-4">
-                  <div>
-                    <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
-                  </div>
-                  <Text size="2" className="text-gray-700">
-                    98份正在拍卖, 起拍价1.2USDT, 来自0Xdddd
-                  </Text>
-                </div>
-                <div className="grid grid-cols-3 gap-4 mb-4">
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
-                    <div className="text-indigo-600">1.2 USDT</div>
-                    <div>Lowest</div>
-                  </div>
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
-                    <div className="text-red-600">10%</div>
-                    <div>Dividend</div>
-                  </div>
-                  <div className="bg-gray-100 text-center font-bold p-2 rounded shadow-md hover:shadow-lg">
-                    <div className="text-green-600">0.3 USDT</div>
-                    <div>Markup</div>
-                  </div>
-                </div>
-              </div>
-              <div className="mb-4">
-                <Text size="4" className="font-bold text-lg">
-                  Bid List
-                </Text>
-                <ScrollArea
-                  type="always"
-                  scrollbars="vertical"
-                  style={{ height: 180 }}
-                >
-                  {Array.from({ length: 10 }).map((_, index) => (
-                    <div key={index} className="w-full mb-2 flex items-center">
-                      <div>
-                        <AvatarDiv iconAttr={{ width: 35, height: 35 }} />
-                      </div>
-                      <div className="ml-2">
-                        <Text size="2" as="p">
-                          出价
-                          {" "}
-                          <Strong>1.2USDT</Strong>
-                        </Text>
-                        <Text size="1" as="p" className="text-gray-500">
-                          0xeeeeeee
-                          {`${index}`}
-                        </Text>
-                      </div>
-                    </div>
-                  ))}
-                </ScrollArea>
-              </div>
-              <div className="mb-4">
-                <Text size="4" className="font-bold text-lg">
-                  Best Bid
-                </Text>
-                <Text as="p" size="2" className="text-gray-500">
-                  Top Price from
-                </Text>
-                <Text as="p" size="1" className="text-gray-700">
-                  0XEEEEEEEEEEEEEEEEEE
-                </Text>
-                <Text as="p" className="text-blue-600 font-bold">
-                  1.3 USDT
-                </Text>
-              </div>
-              <Dialog.Root open={open} onOpenChange={setOpen}>
-                <Dialog.Trigger>
-                  <Button style={{ width: "100%", marginBottom: "1rem" }}>
-                    Auction
-                  </Button>
-                </Dialog.Trigger>
-                <Dialog.Content maxWidth="380px" minHeight="600px">
-                  <Flex justify="between" align="center" className="mb-2">
-                    <span className="font-bold text-lg">{CurrentNFT.name}</span>
+              <Text size="4" className="font-bold text-lg">
+                Auction Detail
+              </Text>
+              <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} />
 
-                    <Dialog.Close>
-                      <Cross1Icon className="cursor-pointer" />
-                    </Dialog.Close>
-                  </Flex>
-                  <NTabs
-                    fullWidth
-                    size="md"
-                    aria-label="Tabs form"
-                    selectedKey={selected}
-                    onSelectionChange={setSelected}
-                  >
+              { isOnAuctionBritish || isOnAuctionDutch ? (
+                <Button className="!bg-[#ccc]" style={{ width: "100%", marginBottom: "1rem" }}>
+                  Under auction
+                </Button>
+              ) : (
+                <Dialog.Root open={open} onOpenChange={setOpen}>
+                  <Dialog.Trigger>
+                    <Button style={{ width: "100%", marginBottom: "1rem" }}>
+                      Auction
+                    </Button>
+                  </Dialog.Trigger>
+                  <Dialog.Content maxWidth="380px" minHeight="600px">
+                    <Flex justify="between" align="center" className="mb-2">
+                      <span className="font-bold text-lg">{CurrentNFT.name}</span>
 
-                    <NTab key="british" title="British">
-                      <Input
-                        label="start price"
-                        value={startPrice}
-                        onValueChange={setStartPrice}
-                      />
-                      <DateInput
-                        granularity="second"
-                        label="start time"
-                        className="mt-3"
-                        value={startTime}
-                        onChange={setStartTime}
-                      />
-                      <Input
-                        label="interval"
-                        className="mt-3"
-                        value={interval}
-                        onValueChange={setInterval}
-                        description="In seconds"
-                      />
-                    </NTab>
-                    <NTab key="dutch" title="Dutch">
-                      <Input
-                        label="start price"
-                        value={startPrice}
-                        onValueChange={setStartPrice}
-                      />
-                      <Input
-                        value={floorPrice}
-                        onValueChange={setFloorPrice}
-                        label="floor price"
-                        className="mt-3"
-                      />
-                      <Input
-                        label="reserve duration"
-                        value={reserveDuration}
-                        onValueChange={setReserveDuration}
-                        className="mt-3"
-                        description="In seconds"
-                      />
-                      <DateInput
-                        granularity="second"
-                        label="start time"
-                        className="mt-3"
-                        value={startTime}
-                        onChange={setStartTime}
-                      />
-                      <Input
-                        value={decayInterval}
-                        onValueChange={setDecayInterval}
-                        label="decay interval"
-                        className="mt-3"
-                      />
-                      <Input
-                        value={decayAmount}
-                        onValueChange={setDecayAmount}
-                        label="decay amount"
-                        className="mt-3"
-                      />
-                    </NTab>
-                  </NTabs>
-                  {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-                  <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "bg-[#ccc]")}>
-                    {isPending && <Spinner className="mr-2" /> }
-                    <Box>submit auction</Box>
-                  </Flex>
-                </Dialog.Content>
-              </Dialog.Root>
-              <div>
+                      <Dialog.Close>
+                        <Cross1Icon className="cursor-pointer" />
+                      </Dialog.Close>
+                    </Flex>
+                    <NTabs
+                      fullWidth
+                      size="md"
+                      aria-label="Tabs form"
+                      selectedKey={selected}
+                      onSelectionChange={setSelected}
+                    >
+
+                      <NTab key="british" title="British">
+                        <Input
+                          label="start price"
+                          value={startPrice}
+                          onValueChange={setStartPrice}
+                        />
+                        <DateInput
+                          granularity="second"
+                          label="start time"
+                          className="mt-3"
+                          value={startTime}
+                          onChange={setStartTime}
+                        />
+                        <Input
+                          label="interval"
+                          className="mt-3"
+                          value={interval}
+                          onValueChange={setInterval}
+                          description="In seconds"
+                        />
+                      </NTab>
+                      <NTab key="dutch" title="Dutch">
+                        <Input
+                          label="start price"
+                          value={startPrice}
+                          onValueChange={setStartPrice}
+                        />
+                        <Input
+                          value={floorPrice}
+                          onValueChange={setFloorPrice}
+                          label="floor price"
+                          className="mt-3"
+                        />
+                        <Input
+                          label="reserve duration"
+                          value={reserveDuration}
+                          onValueChange={setReserveDuration}
+                          className="mt-3"
+                          description="In seconds"
+                        />
+                        <DateInput
+                          granularity="second"
+                          label="start time"
+                          className="mt-3"
+                          value={startTime}
+                          onChange={setStartTime}
+                        />
+                        <Input
+                          value={decayInterval}
+                          onValueChange={setDecayInterval}
+                          label="decay interval"
+                          className="mt-3"
+                        />
+                        <Input
+                          value={decayAmount}
+                          onValueChange={setDecayAmount}
+                          label="decay amount"
+                          className="mt-3"
+                        />
+                      </NTab>
+                    </NTabs>
+                    {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
+                    <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "!bg-[#ccc]")}>
+                      {isPending && <Spinner className="mr-2" /> }
+                      <Box>submit auction</Box>
+                    </Flex>
+                  </Dialog.Content>
+                </Dialog.Root>
+              )}
+
+              {/* <div>
                 <Text
                   size="2"
                   className="text-green-500 font-bold text-center"
@@ -406,7 +454,7 @@ const DetailContainerPage = (props: Props) => {
                   Deadline:
                   {CurrentNFT.deadline}
                 </Text>
-              </div>
+              </div> */}
             </Tabs.Content>
           </div>
         </Tabs.Root>

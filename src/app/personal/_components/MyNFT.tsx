@@ -111,9 +111,9 @@ const MyNFT = () => {
         <ScrollArea size="1" type="always" scrollbars="horizontal">
           <div className="flex justify-between">
             {nfts.map((e, i) => (
-              <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
-                <AuctionItem item={e} key={i} />
-              </PopoverWarp>
+              // <PopoverWarp className="ml-2 mr-2" key={i} item={e}>
+              <AuctionItem item={e} key={i} />
+              // </PopoverWarp>
             ))}
           </div>
         </ScrollArea>
