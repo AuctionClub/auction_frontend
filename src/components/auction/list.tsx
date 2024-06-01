@@ -6,6 +6,7 @@ import AuctionItem from "@/components/auction/item";
 import useTheGraph from "@/hooks/useTheGraph";
 import { useNFTsBycontract, useAggregateNFTs } from "@/hooks/useNFT";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 import PopoverWarp from "../popover";
 
 export default function AuctionList() {
@@ -27,6 +28,7 @@ export default function AuctionList() {
       }
       auctionCreateds{
         id
+        tokenId
         auctionId
         seller
         startingPrice
@@ -48,22 +50,22 @@ export default function AuctionList() {
 
     if (!auctionLoading && !openSeaLoading && auctionData && openSeaNFTs) {
       try {
-        const aggregatedData:any = openSeaNFTs.map((nft) => {
-          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.id === nft.identifier);
+        const aggregatedData:any = openSeaNFTs.map((nft:any) => {
+          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.tokenId === nft.tokenId);
           return {
-            tokenId: parseInt(nft.tokenId.toString(), 10),
+            tokenId: parseInt(nft?.tokenId.toString(), 10),
             contractAddress: nft.contractAddress,
             img: nft.img,
             price: auction ? auction.startingPrice : nft.price,
             tags: nft.tags,
             currentBid: "N/A",
             currentBidder: "N/A",
-            deadline: auction ? new Date(auction._startTime * 1000).toISOString() : nft.deadline,
+            deadline: auction ? dayjs(auction._startTime * 1000).format("YYYY-MM-DD HH:mm") : nft.deadline,
             name: nft.name,
             description: nft.description,
             isOwner: nft.isOwner,
           };
-        });
+        }).filter((nft) => (auctionData as any)?.data.auctionCreateds.some((a) => a.tokenId === nft.tokenId.toString()));
         setAggregatedNFTs(aggregatedData);
       } catch (err:any) {
         setAggregateError(err.message);
