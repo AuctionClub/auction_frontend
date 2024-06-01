@@ -26,6 +26,13 @@ const useWriteAuction = () => {
       args,
     });
   };
+  const bidDutch = (args:Array<any>) => {
+    writeContract({
+      ...dutchConfig,
+      functionName: "bid",
+      args,
+    });
+  };
   const cancelBritish = (args:Array<any>) => {
     writeContract({
       ...britisConfig,
@@ -42,7 +49,7 @@ const useWriteAuction = () => {
   };
 
   return {
-    createBritish, createDutch, bidBritish, cancelBritish, cancelDutch, error, isError, isPending, isSuccess, data, failureReason,
+    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, error, isError, isPending, isSuccess, data, failureReason,
   };
 };
 

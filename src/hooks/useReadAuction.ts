@@ -1,7 +1,9 @@
-import { useReadContract, useReadContracts } from "wagmi";
+import { useReadContract, useReadContracts, useWatchContractEvent } from "wagmi";
 import { formatEther, formatUnits } from "viem";
 import {
+  useEffect,
   useMemo,
+  useState,
 } from "react";
 import { NFTItem } from "@/hooks/useNFT";
 import { britisConfig, dutchConfig } from "@/constants";
@@ -26,6 +28,7 @@ const useReadAuction = (CurrentNFT:NFTItem) => {
     isOnAuctionDutch,
   } = useMemo(
     () => {
+      console.log("isOnAuction2333", isOnAuction.data);
       let _isOnAuctionBritish = false;
       let _isOnAuctionDutch = false;
       if (isOnAuction.isSuccess) {
@@ -116,6 +119,7 @@ const useReadAuction = (CurrentNFT:NFTItem) => {
     auctionsInfoDutch,
     auctionIdBritis,
     auctionIdDutch,
+    isOnAuction,
   };
 };
 

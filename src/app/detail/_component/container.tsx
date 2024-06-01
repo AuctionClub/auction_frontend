@@ -30,8 +30,9 @@ import dayjs from "dayjs";
 import useWriteAuction from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
-import { BaseError } from "wagmi";
-import { parseEther } from "viem";
+import { BaseError, useWatchContractEvent } from "wagmi";
+import { parseEther, formatUnits } from "viem";
+import { britisConfig, dutchConfig } from "@/constants";
 
 interface InfoProps{
   isOnAuctionBritish: boolean;
@@ -332,6 +333,7 @@ const DetailContainerPage = () => {
   const [CurrentTab, setCurrentTab] = useState("Info");
   const [selected, setSelected] = useState("british");
   const [startPrice, setStartPrice] = useState("");
+  const [bidPrice, setBidPrice] = useState("");
   const [floorPrice, setFloorPrice] = useState("");
   const [reserveDuration, setReserveDuration] = useState("");
   const [interval, setInterval] = useState("");
@@ -342,15 +344,49 @@ const DetailContainerPage = () => {
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
 
   const {
+    isOnAuction,
     isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionIdBritis, auctionIdDutch,
     auctionsInfoDutch,
   } = useReadAuction(CurrentNFT);
+  useWatchContractEvent({
+    ...britisConfig,
+    eventName: "AuctionCancelled",
+    onLogs(logs) {
+      console.log("AuctionCancelled!", logs);
+      isOnAuction.refetch();
+    },
+  });
+  useWatchContractEvent({
+    ...dutchConfig,
+    eventName: "AuctionFailed",
+    onLogs(logs) {
+      console.log("AuctionFailed!", logs);
+      isOnAuction.refetch();
+    },
+  });
+  useWatchContractEvent({
+    ...britisConfig,
+    eventName: "AuctionCreated",
+    onLogs(logs) {
+      console.log("AuctionCreated!", logs);
+      isOnAuction.refetch();
+    },
+  });
+  useWatchContractEvent({
+    ...dutchConfig,
+    eventName: "AuctionStarted",
+    onLogs(logs) {
+      console.log("AuctionStarted!", logs);
+      isOnAuction.refetch();
+    },
+  });
 
   const {
-    createBritish, createDutch, bidBritish, isError, isPending, isSuccess, data, error, failureReason,
+    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
 
   useEffect(() => {
+    console.log("error====>", error);
     if (error?.message) {
       setErrMsg((error as BaseError).shortMessage || error?.message);
     } else if (isSuccess) {
@@ -359,10 +395,15 @@ const DetailContainerPage = () => {
   }, [
     isError, isPending, isSuccess, error, failureReason,
   ]);
-  const bidSubmit = (event:any) => {
-    const _data = Object.fromEntries(new FormData(event.currentTarget));
-    console.log("看下数据", _data);
-    event.preventDefault();
+  const bidSubmit = () => {
+    if (!auctionIdDutch) return;
+    setErrMsg("");
+    if (isOnAuctionBritish) {
+      bidBritish([auctionIdBritis, parseEther(bidPrice)]);
+    } else if (isOnAuctionDutch) {
+      const res = bidDutch([formatUnits(auctionIdDutch as any, 0)]);
+      console.log("竞拍结果", res);
+    }
   };
   const submit = () => {
     if (isPending) return;
@@ -373,15 +414,14 @@ const DetailContainerPage = () => {
       createBritish(args);
     } else {
       const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
-      // console.log("看下参数", args);
       createDutch(args);
     }
   };
-  const cancelAution = () => {
+  const cancelAution = async () => {
     if (isOnAuctionBritish) {
-
+      await cancelBritish([auctionIdBritis]);
     } else if (isOnAuctionDutch) {
-
+      await cancelDutch([auctionIdDutch]);
     }
   };
   return (
@@ -439,7 +479,7 @@ const DetailContainerPage = () => {
                   {CurrentNFT.description}
                 </Text>
                 <p className="text-lg font-bold mb-2">
-                  Auction Type:
+                  Collect Type:
                   {" "}
                   {CurrentNFT.tags.map((tag) => (
                     <Badge
@@ -457,7 +497,7 @@ const DetailContainerPage = () => {
             </Tabs.Content>
 
             <Tabs.Content value="Bid">
-              <Form.Root onSubmit={(event) => bidSubmit(event)}>
+              {/* <Form.Root>
                 {
                   isOnAuctionBritish && (
                   <Form.Field className="grid mb-4" name="bidPrice">
@@ -480,8 +520,8 @@ const DetailContainerPage = () => {
                     </Form.Control>
                   </Form.Field>
                   )
-                }
-                {/* <Form.Field className="grid mb-4" name="count">
+                } */}
+              {/* <Form.Field className="grid mb-4" name="count">
                   <div className="flex items-baseline justify-between">
                     <Form.Label className="text-sm font-medium leading-8">
                       Count
@@ -500,20 +540,34 @@ const DetailContainerPage = () => {
                     />
                   </Form.Control>
                 </Form.Field> */}
-                <Text>
-                  Your Balance:
-                  <Strong>
-                    {1000}
-                    ETH
-                  </Strong>
-                </Text>
-                <Form.Submit asChild>
-                  <Button style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
-                    {isPending && <Spinner className="mr-2" /> }
-                    <Box>Confirm</Box>
-                  </Button>
+
+              {/* <Form.Submit asChild>
+
                 </Form.Submit>
-              </Form.Root>
+              </Form.Root> */}
+              {
+              isOnAuctionBritish && (
+              <Input
+                label="Please enter your Bid Price"
+                value={bidPrice}
+                onValueChange={setBidPrice}
+              />
+              )
+
+             }
+              <Text>
+                {" "}
+                Your Balance:
+                <Strong>
+                  {1000}
+                  ETH
+                </Strong>
+              </Text>
+              {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
+              <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
+                {isPending && <Spinner className="mr-2" /> }
+                <Box>Confirm</Box>
+              </Button>
             </Tabs.Content>
 
             <Tabs.Content value="Auction">
@@ -521,7 +575,9 @@ const DetailContainerPage = () => {
               <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
 
               { isOnAuctionBritish || isOnAuctionDutch ? (
-                <Button onClick={() => cancelAution()} style={{ width: "100%", marginBottom: "1rem" }}>
+                <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
+                  {isPending && <Spinner className="mr-2" /> }
+                  {" "}
                   cancel auction
                 </Button>
               ) : (
