@@ -2,6 +2,8 @@ import {
   Box, Flex,
 } from "@radix-ui/themes";
 import Link from "next/link";
+import Image from "next/image";
+import logo from "/public/logo.png";
 
 export default function Footer() {
   return (
@@ -9,6 +11,13 @@ export default function Footer() {
       <div className=" flex flex-row justify-between py-8 max-w-screen-xl mx-auto px-10">
         <Box className="flex-1">
           <p className="text-2xl">Media</p>
+          <Image
+            width={50}
+            height={50}
+            src={logo}
+            alt="logo"
+            className="rounded-lg "
+          />
           <Flex className="mt-4" align="center">
             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
               <path

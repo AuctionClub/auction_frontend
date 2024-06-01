@@ -11,6 +11,8 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
 import AvatarDiv from "../avatar";
 import TooltipProvider from "../tooltip";
+import Image from "next/image";
+import logo from "/public/logo.png";
 
 export const Navbar = () => {
   const scroll = useScroll(() => document);
@@ -24,14 +26,21 @@ export const Navbar = () => {
       )}
     >
       <div className="w-full flex justify-between items-center h-16  md:max-w-screen-lg 2xl:max-w-screen-xl">
-        <span
-          className="ml-2 font-semibold text-primary text-3xl cursor-pointer"
+        <div
+          className="ml-2 flex items-center font-semibold text-sky-400 text-3xl cursor-pointer"
           onClick={() => {
             router.push("/");
           }}
         >
-          AuctionClub
-        </span>
+          <Image
+            width={50}
+            height={50}
+            src={logo}
+            alt="logo"
+            className="rounded-lg "
+          />
+          <span className="ml-2">AuctionClub</span>
+        </div>
         <div className=" flex justify-between items-center">
           <ConnectButton />
           <TooltipProvider text="Personal Center" className="mx-2">
