@@ -185,7 +185,7 @@ const AuctionPanel = React.memo(({
           </div>
           <Box className="flex-1 overflow-hidden">
             <Box className="text-gray-700">
-              起拍价:
+              Starting Price:
               {" "}
               {auctionsInfoBritis.startingPrice}
               {" "}
@@ -278,7 +278,7 @@ const AuctionPanel = React.memo(({
         </div>
         <Box className="flex-1 overflow-hidden">
           <Box className="text-gray-700">
-            起拍价:
+            Start Pirce:
             {" "}
             {auctionsInfoDutch.startingPrice}
             {" "}

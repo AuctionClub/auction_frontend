@@ -26,7 +26,7 @@ export default function AuctionItem({ item }: AuctionItemProps) {
         <p className="font-bold text-lg mb-1">{item.name}</p>
         <div className="text-xs">
           <div className="flex mt-0.5">
-            <p>类型：</p>
+            <p>Type:</p>
             <p className="flex-1">{item.tags.join(" · ")}</p>
           </div>
         </div>
