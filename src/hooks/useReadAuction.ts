@@ -127,7 +127,11 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     }
     return _balances;
   }, [balancesData]);
-
+  const getCurrentPrice = useReadContract({
+    ...dutchConfig,
+    functionName: "getCurrentPrice",
+    args: [CurrentNFT.auctionId],
+  });
   return {
     isOnAuctionBritish,
     isOnAuctionDutch,
@@ -137,6 +141,7 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     auctionIdDutch,
     isOnAuction,
     balances,
+    getCurrentPrice,
   };
 };
 

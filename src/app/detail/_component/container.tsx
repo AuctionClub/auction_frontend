@@ -40,7 +40,7 @@ interface InfoProps{
   auctionsInfoBritis:any;
   auctionsInfoDutch:any;
 }
-const Info = ({
+const Info = React.memo(({
   isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
 }:InfoProps) => {
   if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
@@ -171,7 +171,7 @@ const Info = ({
       </p>
     </>
   );
-};
+});
 const AuctionPanel = ({
   isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
 }:InfoProps) => {
@@ -342,13 +342,16 @@ const DetailContainerPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
+
   const account = useAccount();
   const {
     isOnAuction,
     isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionIdBritis, auctionIdDutch,
     auctionsInfoDutch,
     balances,
+    getCurrentPrice,
   } = useReadAuction(CurrentNFT, account.address);
+
   useWatchContractEvent({
     ...britisConfig,
     eventName: "AuctionCancelled",
@@ -383,11 +386,12 @@ const DetailContainerPage = () => {
   });
 
   const {
-    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
+    createBritish, createDutch, bidBritish, useBidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
-
+  const [Argsobj, setArgsobj] = useState({ value: "", args: [] });
+  const { data: DutchbidData } = useBidDutch((Argsobj as any).value, (Argsobj as any).args);
   useEffect(() => {
-    console.log("error====>", error);
+    console.log("error====>", (error as any)?.message);
     if (error?.message) {
       setErrMsg((error as BaseError).shortMessage || error?.message);
     } else if (isSuccess) {
@@ -403,7 +407,12 @@ const DetailContainerPage = () => {
       console.log("cansh", formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice));
       bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
     } else if (isOnAuctionDutch) {
-      const res = bidDutch([formatUnits(auctionIdDutch as any, 0)]);
+      const a = formatUnits(getCurrentPrice.data as any, 0);
+      //   const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
+      setArgsobj({ value: a, args: formatUnits(auctionIdDutch as any, 0) });
+      console.log(res, "@@@@@");
+      //   debugger;
+
       console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
     }
   };

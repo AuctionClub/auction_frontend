@@ -17,6 +17,7 @@ export interface Metadata {
 export interface NFTItem {
   tokenId: number;
   contractAddress: string;
+  auctionId?: string;
   img: string;
   price: string;
   tags: string[];

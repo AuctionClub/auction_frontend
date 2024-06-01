@@ -6,5 +6,6 @@ export const britisConfig = {
 } as const;
 export const dutchConfig = {
   abi: DutchAuctionAbi,
-  address: "0xF02816d8f95E4791986ad28c5a1D4Fc5aD6B0209",
+  address: "0xfb03236F8C0eff846f9aD2aF7d9fd05c2AE142f8",
 } as const;
+// 新部署的荷兰拍，事件里增加了endTime：0xfb03236F8C0eff846f9aD2aF7d9fd05c2AE142f8
