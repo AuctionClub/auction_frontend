@@ -26,16 +26,25 @@ const useWriteAuction = () => {
       args,
     });
   };
-  const useBidDutch = (value:any, args:Array<any>) => {
-    const result = useSimulateContract({
+  const bidDutch = (value:any, args:Array<any>) => {
+    writeContract({
       ...dutchConfig,
       functionName: "bid",
       args,
       value,
     });
-    console.log(value, args, result.error?.message, "调用了出价");
-    return result;
   };
+  //   const useBidDutch = (value:any, args:Array<any>) => {
+  //     const result = useSimulateContract({
+  //       ...dutchConfig,
+  //       functionName: "bid",
+  //       args,
+  //       value,
+  //     });
+  //     console.log(value, args, result, result.error?.message, "调用了出价");
+  //     return result;
+  //   };
+
   const cancelBritish = (args:Array<any>) => {
     writeContract({
       ...britisConfig,

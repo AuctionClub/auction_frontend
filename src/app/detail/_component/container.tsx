@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
   Badge,
@@ -172,7 +172,7 @@ const Info = React.memo(({
     </>
   );
 });
-const AuctionPanel = ({
+const AuctionPanel = React.memo(({
   isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
 }:InfoProps) => {
   if (!isOnAuctionBritish && !isOnAuctionDutch) return null;
@@ -326,7 +326,7 @@ const AuctionPanel = ({
       </div>
     </>
   );
-};
+});
 
 const DetailContainerPage = () => {
   const CurrentNFT: NFTItem = StorageUtil.getLocalStorage("currentNFT");
@@ -390,10 +390,11 @@ const DetailContainerPage = () => {
   });
 
   const {
-    createBritish, createDutch, bidBritish, useBidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
+    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
   const [Argsobj, setArgsobj] = useState({ value: "", args: [] });
-  const { data: DutchbidData } = useBidDutch((Argsobj as any).value, (Argsobj as any).args); useEffect(() => {
+  //   const { data: DutchbidData } = useBidDutch((Argsobj as any).value, (Argsobj as any).args);
+  useEffect(() => {
     if ((isOnAuctionBritish && auctionsInfoBritisSuccess) || (isOnAuctionDutch && auctionsInfoDutchSuccess)) {
       setLoading(false);
     }
@@ -416,8 +417,8 @@ const DetailContainerPage = () => {
       bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
     } else if (isOnAuctionDutch) {
       const a = formatUnits(getCurrentPrice.data as any, 0);
-      //   const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
-      setArgsobj({ value: a, args: formatUnits(auctionIdDutch as any, 0) });
+      const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
+      //   setArgsobj({ value: a, args: formatUnits(auctionIdDutch as any, 0) });
       //   console.log(res, "@@@@@");
       //   debugger;
 
@@ -446,6 +447,10 @@ const DetailContainerPage = () => {
       await cancelDutch([auctionIdDutch]);
     }
   };
+  const auctionData = useMemo(() => ({
+    isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch,
+  }), [isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionsInfoDutch]);
+
   return (
     // TODO:跨页面数据传递
     <div className="flex w-full h-[93vh] ">
@@ -555,8 +560,8 @@ const DetailContainerPage = () => {
               {
                 loading ? <Spinner size="3" className="mx-auto my-auto" /> : (
                   <>
-                    <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
-                    <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
+                    <Info {...auctionData} />
+                    <AuctionPanel {...auctionData} />
 
                     {CurrentNFT.isOwner && (isOnAuctionBritish || isOnAuctionDutch ? (
                       <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
