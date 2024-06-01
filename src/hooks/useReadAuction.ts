@@ -91,6 +91,7 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
       let _auctionsInfoDutch = {
 
       };
+      console.log("看下装", auctionsInfoBritisData);
       if (auctionsInfoBritisData.data) {
         const [seller, nftAddress, nftTokenId, startingPrice, currentHighestBid, currentHighestBidder, ended, totalBidAmount, startTime, endTime, interval] = auctionsInfoBritisData.data as any;
         _auctionsInfoBritis = {
@@ -137,6 +138,8 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     auctionIdDutch,
     isOnAuction,
     balances,
+    auctionsInfoBritisSuccess: auctionsInfoBritisData.isSuccess,
+    auctionsInfoDutchSuccess: auctionsInfoDutchData.isSuccess,
   };
 };
 

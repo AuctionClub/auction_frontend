@@ -330,7 +330,9 @@ const AuctionPanel = ({
 
 const DetailContainerPage = () => {
   const CurrentNFT: NFTItem = StorageUtil.getLocalStorage("currentNFT");
+
   const [CurrentTab, setCurrentTab] = useState("Info");
+  const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState("british");
   const [startPrice, setStartPrice] = useState("");
   const [bidPrice, setBidPrice] = useState("");
@@ -348,6 +350,8 @@ const DetailContainerPage = () => {
     isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritis, auctionIdBritis, auctionIdDutch,
     auctionsInfoDutch,
     balances,
+    auctionsInfoBritisSuccess,
+    auctionsInfoDutchSuccess,
   } = useReadAuction(CurrentNFT, account.address);
   useWatchContractEvent({
     ...britisConfig,
@@ -385,7 +389,11 @@ const DetailContainerPage = () => {
   const {
     createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
   } = useWriteAuction();
-
+  useEffect(() => {
+    if ((isOnAuctionBritish && auctionsInfoBritisSuccess) || (isOnAuctionDutch && auctionsInfoDutchSuccess)) {
+      setLoading(false);
+    }
+  }, [isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritisSuccess, auctionsInfoDutchSuccess]);
   useEffect(() => {
     console.log("error====>", error);
     if (error?.message) {
@@ -502,181 +510,146 @@ const DetailContainerPage = () => {
             </Tabs.Content>
 
             <Tabs.Content value="Bid">
-              {/* <Form.Root>
-                {
-                  isOnAuctionBritish && (
-                  <Form.Field className="grid mb-4" name="bidPrice">
-                    <div className="flex items-baseline justify-between">
-                      <Form.Label className="text-sm font-medium leading-8">
-                        Bid Price
-                      </Form.Label>
-                      <Form.Message
-                        className="text-xs text-gray-500"
-                        match="valueMissing"
-                      >
-                        Please enter your Bid Price
-                      </Form.Message>
-                    </div>
-                    <Form.Control asChild>
-                      <input
-                        className="w-full bg-white shadow-sm rounded px-3 py-2 text-sm leading-none outline-none focus:ring-2 focus:ring-indigo-600"
-                        required
-                      />
-                    </Form.Control>
-                  </Form.Field>
-                  )
-                } */}
-              {/* <Form.Field className="grid mb-4" name="count">
-                  <div className="flex items-baseline justify-between">
-                    <Form.Label className="text-sm font-medium leading-8">
-                      Count
-                    </Form.Label>
-                    <Form.Message
-                      className="text-xs text-gray-500"
-                      match="valueMissing"
-                    >
-                      Please enter a count
-                    </Form.Message>
-                  </div>
-                  <Form.Control asChild>
-                    <input
-                      className="w-full bg-white shadow-sm rounded px-3 py-2 text-sm leading-none outline-none focus:ring-2 focus:ring-indigo-600"
-                      required
-                    />
-                  </Form.Control>
-                </Form.Field> */}
-
-              {/* <Form.Submit asChild>
-
-                </Form.Submit>
-              </Form.Root> */}
               {
-              isOnAuctionBritish && (
-              <Input
-                label="Please enter your Bid Price"
-                value={bidPrice}
-                onValueChange={setBidPrice}
-              />
-              )
+                 loading ? <Spinner size="3" className="mx-auto my-auto" /> : (
+                   <>
+                     {" "}
+                     {
+                    isOnAuctionBritish && (
+                      <Input
+                        label="Please enter your Bid Price"
+                        value={bidPrice}
+                        onValueChange={setBidPrice}
+                      />
+                    )
+                    }
+                     <Text>
+                       {" "}
+                       Your Balance:
+                       <Strong>
+                         {balances}
+                         ETH
+                       </Strong>
+                     </Text>
+                     {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
+                     <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
+                       {isPending && <Spinner className="mr-2" /> }
+                       <Box>Confirm</Box>
+                     </Button>
+                   </>
+                 )
+              }
 
-             }
-              <Text>
-                {" "}
-                Your Balance:
-                <Strong>
-                  {balances}
-                  ETH
-                </Strong>
-              </Text>
-              {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-              <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
-                {isPending && <Spinner className="mr-2" /> }
-                <Box>Confirm</Box>
-              </Button>
             </Tabs.Content>
 
             <Tabs.Content value="Auction">
-              <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
-              <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
+              {
+                loading ? <Spinner size="3" className="mx-auto my-auto" /> : (
+                  <>
+                    <Info isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
+                    <AuctionPanel isOnAuctionBritish={isOnAuctionBritish} isOnAuctionDutch={isOnAuctionDutch} auctionsInfoBritis={auctionsInfoBritis} auctionsInfoDutch={auctionsInfoDutch} />
 
-              {CurrentNFT.isOwner && (isOnAuctionBritish || isOnAuctionDutch ? (
-                <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
-                  {isPending && <Spinner className="mr-2" /> }
-                  {" "}
-                  cancel auction
-                </Button>
-              ) : (
-                <Dialog.Root open={open} onOpenChange={setOpen}>
-                  <Dialog.Trigger>
-                    <Button style={{ width: "100%", marginBottom: "1rem" }}>
-                      Auction
-                    </Button>
-                  </Dialog.Trigger>
-                  <Dialog.Content maxWidth="380px" minHeight="600px">
-                    <Flex justify="between" align="center" className="mb-2">
-                      <span className="font-bold text-lg">{CurrentNFT.name}</span>
+                    {CurrentNFT.isOwner && (isOnAuctionBritish || isOnAuctionDutch ? (
+                      <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
+                        {isPending && <Spinner className="mr-2" /> }
+                        {" "}
+                        cancel auction
+                      </Button>
+                    ) : (
+                      <Dialog.Root open={open} onOpenChange={setOpen}>
+                        <Dialog.Trigger>
+                          <Button style={{ width: "100%", marginBottom: "1rem" }}>
+                            Auction
+                          </Button>
+                        </Dialog.Trigger>
+                        <Dialog.Content maxWidth="380px" minHeight="600px">
+                          <Flex justify="between" align="center" className="mb-2">
+                            <span className="font-bold text-lg">{CurrentNFT.name}</span>
 
-                      <Dialog.Close>
-                        <Cross1Icon className="cursor-pointer" />
-                      </Dialog.Close>
-                    </Flex>
-                    <NTabs
-                      fullWidth
-                      size="md"
-                      aria-label="Tabs form"
-                      selectedKey={selected}
-                      onSelectionChange={setSelected}
-                    >
+                            <Dialog.Close>
+                              <Cross1Icon className="cursor-pointer" />
+                            </Dialog.Close>
+                          </Flex>
+                          <NTabs
+                            fullWidth
+                            size="md"
+                            aria-label="Tabs form"
+                            selectedKey={selected}
+                            onSelectionChange={setSelected}
+                          >
 
-                      <NTab key="british" title="British">
-                        <Input
-                          label="start price"
-                          value={startPrice}
-                          onValueChange={setStartPrice}
-                        />
-                        <DateInput
-                          granularity="second"
-                          label="start time"
-                          className="mt-3"
-                          value={startTime}
-                          onChange={setStartTime}
-                        />
-                        <Input
-                          label="interval"
-                          className="mt-3"
-                          value={interval}
-                          onValueChange={setInterval}
-                          description="In seconds"
-                        />
-                      </NTab>
-                      <NTab key="dutch" title="Dutch">
-                        <Input
-                          label="start price"
-                          value={startPrice}
-                          onValueChange={setStartPrice}
-                        />
-                        <Input
-                          value={floorPrice}
-                          onValueChange={setFloorPrice}
-                          label="floor price"
-                          className="mt-3"
-                        />
-                        <Input
-                          label="reserve duration"
-                          value={reserveDuration}
-                          onValueChange={setReserveDuration}
-                          className="mt-3"
-                          description="In seconds"
-                        />
-                        <DateInput
-                          granularity="second"
-                          label="start time"
-                          className="mt-3"
-                          value={startTime}
-                          onChange={setStartTime}
-                        />
-                        <Input
-                          value={decayInterval}
-                          onValueChange={setDecayInterval}
-                          label="decay interval"
-                          className="mt-3"
-                        />
-                        <Input
-                          value={decayAmount}
-                          onValueChange={setDecayAmount}
-                          label="decay amount"
-                          className="mt-3"
-                        />
-                      </NTab>
-                    </NTabs>
-                    {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-                    <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "!bg-[#ccc]")}>
-                      {isPending && <Spinner className="mr-2" /> }
-                      <Box>submit auction</Box>
-                    </Flex>
-                  </Dialog.Content>
-                </Dialog.Root>
-              ))}
+                            <NTab key="british" title="British">
+                              <Input
+                                label="start price"
+                                value={startPrice}
+                                onValueChange={setStartPrice}
+                              />
+                              <DateInput
+                                granularity="second"
+                                label="start time"
+                                className="mt-3"
+                                value={startTime}
+                                onChange={setStartTime}
+                              />
+                              <Input
+                                label="interval"
+                                className="mt-3"
+                                value={interval}
+                                onValueChange={setInterval}
+                                description="In seconds"
+                              />
+                            </NTab>
+                            <NTab key="dutch" title="Dutch">
+                              <Input
+                                label="start price"
+                                value={startPrice}
+                                onValueChange={setStartPrice}
+                              />
+                              <Input
+                                value={floorPrice}
+                                onValueChange={setFloorPrice}
+                                label="floor price"
+                                className="mt-3"
+                              />
+                              <Input
+                                label="reserve duration"
+                                value={reserveDuration}
+                                onValueChange={setReserveDuration}
+                                className="mt-3"
+                                description="In seconds"
+                              />
+                              <DateInput
+                                granularity="second"
+                                label="start time"
+                                className="mt-3"
+                                value={startTime}
+                                onChange={setStartTime}
+                              />
+                              <Input
+                                value={decayInterval}
+                                onValueChange={setDecayInterval}
+                                label="decay interval"
+                                className="mt-3"
+                              />
+                              <Input
+                                value={decayAmount}
+                                onValueChange={setDecayAmount}
+                                label="decay amount"
+                                className="mt-3"
+                              />
+                            </NTab>
+                          </NTabs>
+                          {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
+                          <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "!bg-[#ccc]")}>
+                            {isPending && <Spinner className="mr-2" /> }
+                            <Box>submit auction</Box>
+                          </Flex>
+                        </Dialog.Content>
+                      </Dialog.Root>
+                    ))}
+                  </>
+                )
+              }
 
               {/* <div>
                 <Text
