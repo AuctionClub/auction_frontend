@@ -9,12 +9,10 @@ import {
   Tabs,
   Button,
   Dialog,
-  ScrollArea,
   Strong,
   Flex,
   Spinner,
 } from "@radix-ui/themes";
-import * as Form from "@radix-ui/react-form";
 import AvatarDiv from "@/components/avatar";
 import StorageUtil from "@/lib/storage";
 import { NFTItem } from "@/hooks/useNFT";
@@ -32,7 +30,7 @@ import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
 import { BaseError, useWatchContractEvent, useAccount } from "wagmi";
 import { parseEther, formatUnits } from "viem";
-import { britisConfig, dutchConfig, NFTConfig } from "@/constants";
+import { britisConfig, dutchConfig } from "@/constants";
 
 interface InfoProps{
   isOnAuctionBritish: boolean;
@@ -347,7 +345,6 @@ const DetailContainerPage = () => {
   const {
     approveNft2, data: ApproveNftData, isSuccess: ApproveNftSuccess, isError: ApproveNftError, isPending: ApproveNftLoading,
   } = useApproveNft();
-  //   console.log(ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, "@@@@@@@@@@@@@@@@@@啊啊啊啊啊");
 
   const account = useAccount();
   const {
@@ -356,16 +353,19 @@ const DetailContainerPage = () => {
     auctionsInfoDutch,
     balances,
     getCurrentPrice,
-    auctionsInfoBritisSuccess,
-    auctionsInfoDutchSuccess,
+    isGetAuctionStatus,
   } = useReadAuction(CurrentNFT, account.address);
+
+  const reload = () => {
+    isOnAuction.refetch();
+  };
 
   useWatchContractEvent({
     ...britisConfig,
     eventName: "AuctionCancelled",
     onLogs(logs) {
       console.log("AuctionCancelled!", logs);
-      isOnAuction.refetch();
+      reload();
     },
   });
   useWatchContractEvent({
@@ -373,7 +373,7 @@ const DetailContainerPage = () => {
     eventName: "AuctionFailed",
     onLogs(logs) {
       console.log("AuctionFailed!", logs);
-      isOnAuction.refetch();
+      reload();
     },
   });
   useWatchContractEvent({
@@ -381,7 +381,7 @@ const DetailContainerPage = () => {
     eventName: "AuctionCreated",
     onLogs(logs) {
       console.log("AuctionCreated!", logs);
-      isOnAuction.refetch();
+      reload();
     },
   });
   useWatchContractEvent({
@@ -389,21 +389,19 @@ const DetailContainerPage = () => {
     eventName: "AuctionStarted",
     onLogs(logs) {
       console.log("AuctionStarted!", logs);
-      isOnAuction.refetch();
+      reload();
     },
   });
 
   const {
     createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason, approveNft,
   } = useWriteAuction();
-  const [Argsobj, setArgsobj] = useState({ value: "", args: [] });
-  //   const { data: DutchbidData } = useBidDutch((Argsobj as any).value, (Argsobj as any).args);
 
   useEffect(() => {
-    if ((isOnAuctionBritish && auctionsInfoBritisSuccess) || (isOnAuctionDutch && auctionsInfoDutchSuccess)) {
+    if (isGetAuctionStatus) {
       setLoading(false);
     }
-  }, [isOnAuctionBritish, isOnAuctionDutch, auctionsInfoBritisSuccess, auctionsInfoDutchSuccess]);
+  }, [isGetAuctionStatus]);
   useEffect(() => {
     console.log("error====>", (error as any)?.message);
     if (error?.message) {
@@ -422,14 +420,12 @@ const DetailContainerPage = () => {
       setOpen(false);
     }
   }, [
-    getCurrentPrice.isError, getCurrentPrice.error,
+    getCurrentPrice.isError, getCurrentPrice.error, isSuccess,
   ]);
   useEffect(() => {
-    console.log(ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, "文档✔✔✔✔✔✔✔✔✔✔");
     if (ApproveNftSuccess) {
       setErrMsg("");
       if (isOnAuctionBritish) {
-        console.log("cansh", formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice));
         bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
       } else if (isOnAuctionDutch) {
         if (!getCurrentPrice || getCurrentPrice.isError) {
@@ -437,13 +433,11 @@ const DetailContainerPage = () => {
           return;
         }
         const a = formatUnits(getCurrentPrice.data as any, 0);
-        const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
-        console.log(res);
-        console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
+        bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
       }
     }
   }, [
-    ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, auctionIdDutch, getCurrentPrice.data,
+    ApproveNftSuccess, auctionIdDutch, getCurrentPrice, isOnAuctionDutch, bidPrice, auctionIdBritis, bidBritish, bidDutch, isOnAuctionBritish,
   ]);
   const bidSubmit = async () => {
     if (!auctionIdDutch && !auctionIdBritis) return;
@@ -461,16 +455,16 @@ const DetailContainerPage = () => {
   useEffect(() => {
     setErrMsg("");
   }, [selected]);
-  const submit = () => {
+  const submit = async () => {
     if (isPending) return;
     setErrMsg("");
     const _startTime = dayjs(startTime.toDate()).unix();
     if (selected === "british") {
       const args = [parseEther(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
-      createBritish(args);
+      await createBritish(args);
     } else {
       const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
-      createDutch(args);
+      await createDutch(args);
     }
   };
   const cancelAution = async () => {

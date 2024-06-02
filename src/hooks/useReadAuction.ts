@@ -28,7 +28,6 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     isOnAuctionDutch,
   } = useMemo(
     () => {
-      console.log("isOnAuction2333", isOnAuction.data);
       let _isOnAuctionBritish = false;
       let _isOnAuctionDutch = false;
       if (isOnAuction.isSuccess) {
@@ -89,9 +88,8 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     () => {
       let _auctionsInfoBritis = {};
       let _auctionsInfoDutch = {
-
+        isActive: false,
       };
-      console.log("看下装", auctionsInfoBritisData);
       if (auctionsInfoBritisData.data) {
         const [seller, nftAddress, nftTokenId, startingPrice, currentHighestBid, currentHighestBidder, ended, totalBidAmount, startTime, endTime, interval] = auctionsInfoBritisData.data as any;
         _auctionsInfoBritis = {
@@ -104,7 +102,6 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
           seller, nftAddress, nftTokenId: formatUnits(nftTokenId, 0), startingPrice: formatEther(startingPrice), reservePrice: formatEther(reservePrice), startTime: formatUnits(startTime, 0), endTime: formatUnits(endTime, 0), price_decay_interval: formatUnits(price_decay_interval, 0), price_decay_amount: formatEther(price_decay_amount), reserve_duration: formatUnits(reserve_duration, 0), isActive,
         };
       }
-      console.log("_auctionsInfoDutch;", _auctionsInfoDutch);
       return {
         auctionsInfoBritis: _auctionsInfoBritis,
         auctionsInfoDutch: _auctionsInfoDutch,
@@ -132,6 +129,9 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     ...dutchConfig,
     functionName: "getCurrentPrice",
     args: [CurrentNFT.auctionId],
+    query: {
+      enabled: isOnAuctionDutch && auctionsInfoDutch.isActive,
+    },
   });
   return {
     isOnAuctionBritish,
@@ -143,8 +143,7 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     isOnAuction,
     balances,
     getCurrentPrice,
-    auctionsInfoBritisSuccess: auctionsInfoBritisData.isSuccess,
-    auctionsInfoDutchSuccess: auctionsInfoDutchData.isSuccess,
+    isGetAuctionStatus: isOnAuction.isFetched,
   };
 };
 
