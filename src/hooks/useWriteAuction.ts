@@ -82,7 +82,7 @@ const useApproveNft = () => {
   const {
     data, error, writeContract, isError, isPending, isSuccess, failureReason,
   } = useWriteContract();
-  const approveNft2 = (address, args:Array<any>) => {
+  const approveNft2 = (address:any, args:Array<any>) => {
     writeContract({
       ...NFTConfig,
       address,
