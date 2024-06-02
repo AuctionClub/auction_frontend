@@ -549,3 +549,24 @@ export const DutchAuctionAbi = [
     type: "function",
   },
 ];
+
+export const NFTAbi = [
+  {
+    constant: false,
+    inputs: [
+      {
+        name: "to",
+        type: "address",
+      },
+      {
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "approve",
+    outputs: [],
+    payable: false,
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];

@@ -27,12 +27,12 @@ import {
 } from "@nextui-org/react";
 import { parseAbsoluteToLocal } from "@internationalized/date";
 import dayjs from "dayjs";
-import useWriteAuction from "@/hooks/useWriteAuction";
+import { useWriteAuction, useApproveNft } from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
 import { BaseError, useWatchContractEvent, useAccount } from "wagmi";
 import { parseEther, formatUnits } from "viem";
-import { britisConfig, dutchConfig } from "@/constants";
+import { britisConfig, dutchConfig, NFTConfig } from "@/constants";
 
 interface InfoProps{
   isOnAuctionBritish: boolean;
@@ -344,6 +344,10 @@ const DetailContainerPage = () => {
   const [errMsg, setErrMsg] = useState("");
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
+  const {
+    approveNft2, data: ApproveNftData, isSuccess: ApproveNftSuccess, isError: ApproveNftError, isPending: ApproveNftLoading,
+  } = useApproveNft();
+  //   console.log(ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, "@@@@@@@@@@@@@@@@@@啊啊啊啊啊");
 
   const account = useAccount();
   const {
@@ -390,10 +394,11 @@ const DetailContainerPage = () => {
   });
 
   const {
-    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason,
+    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, isError, isPending, isSuccess, data, error, failureReason, approveNft,
   } = useWriteAuction();
   const [Argsobj, setArgsobj] = useState({ value: "", args: [] });
   //   const { data: DutchbidData } = useBidDutch((Argsobj as any).value, (Argsobj as any).args);
+
   useEffect(() => {
     if ((isOnAuctionBritish && auctionsInfoBritisSuccess) || (isOnAuctionDutch && auctionsInfoDutchSuccess)) {
       setLoading(false);
@@ -409,20 +414,48 @@ const DetailContainerPage = () => {
   }, [
     isError, isPending, isSuccess, error, failureReason,
   ]);
-  const bidSubmit = () => {
+  useEffect(() => {
+    console.log("error====>", getCurrentPrice.error?.message);
+    if (getCurrentPrice.isError && getCurrentPrice.error?.message) {
+      setErrMsg(getCurrentPrice.error.shortMessage);
+    } else if (isSuccess) {
+      setOpen(false);
+    }
+  }, [
+    getCurrentPrice.isError, getCurrentPrice.error,
+  ]);
+  useEffect(() => {
+    console.log(ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, "文档✔✔✔✔✔✔✔✔✔✔");
+    if (ApproveNftSuccess) {
+      setErrMsg("");
+      if (isOnAuctionBritish) {
+        console.log("cansh", formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice));
+        bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
+      } else if (isOnAuctionDutch) {
+        if (!getCurrentPrice || getCurrentPrice.isError) {
+          setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
+          return;
+        }
+        const a = formatUnits(getCurrentPrice.data as any, 0);
+        const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
+        console.log(res);
+        console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
+      }
+    }
+  }, [
+    ApproveNftData, ApproveNftSuccess, ApproveNftError, ApproveNftLoading, auctionIdDutch, getCurrentPrice.data,
+  ]);
+  const bidSubmit = async () => {
     if (!auctionIdDutch && !auctionIdBritis) return;
     setErrMsg("");
     if (isOnAuctionBritish) {
-      console.log("cansh", formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice));
-      bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
+      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
     } else if (isOnAuctionDutch) {
-      const a = formatUnits(getCurrentPrice.data as any, 0);
-      const res = bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
-      //   setArgsobj({ value: a, args: formatUnits(auctionIdDutch as any, 0) });
-      //   console.log(res, "@@@@@");
-      //   debugger;
-
-      console.log("竞拍结果", formatUnits(auctionIdDutch as any, 0));
+      if (!getCurrentPrice || getCurrentPrice.isError || getCurrentPrice.isError) {
+        setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
+        return;
+      }
+      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
     }
   };
   useEffect(() => {
@@ -546,8 +579,8 @@ const DetailContainerPage = () => {
                        </Strong>
                      </Text>
                      {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-                     <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
-                       {isPending && <Spinner className="mr-2" /> }
+                     <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx((isPending || ApproveNftLoading) && "!bg-[#ccc]")}>
+                       {(isPending || ApproveNftLoading) && <Spinner className="mr-2" /> }
                        <Box>Confirm</Box>
                      </Button>
                    </>

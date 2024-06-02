@@ -1,5 +1,7 @@
-import { useWriteContract, useSimulateContract } from "wagmi";
-import { britisConfig, dutchConfig } from "@/constants";
+import {
+  useWriteContract, useSimulateContract,
+} from "wagmi";
+import { britisConfig, dutchConfig, NFTConfig } from "@/constants";
 
 const useWriteAuction = () => {
   const {
@@ -26,6 +28,7 @@ const useWriteAuction = () => {
       args,
     });
   };
+
   const bidDutch = (value:any, args:Array<any>) => {
     writeContract({
       ...dutchConfig,
@@ -59,10 +62,35 @@ const useWriteAuction = () => {
       args,
     });
   };
+  const approveNft = (args:Array<any>) => {
+    writeContract({
+      ...NFTConfig,
+      functionName: "approve",
+      args,
+    });
+    return {
+      data, error, isError, isPending, isSuccess, failureReason,
+    };
+  };
 
   return {
-    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, error, isError, isPending, isSuccess, data, failureReason,
+    createBritish, createDutch, bidBritish, bidDutch, cancelBritish, cancelDutch, error, isError, isPending, isSuccess, data, failureReason, approveNft,
   };
 };
+const useApproveNft = () => {
+  const {
+    data, error, writeContract, isError, isPending, isSuccess, failureReason,
+  } = useWriteContract();
+  const approveNft2 = (args:Array<any>) => {
+    writeContract({
+      ...NFTConfig,
+      functionName: "approve",
+      args,
+    });
+  };
 
-export default useWriteAuction;
+  return {
+    approveNft2, data, error, isError, isPending, isSuccess, failureReason,
+  };
+};
+export { useWriteAuction, useApproveNft };
