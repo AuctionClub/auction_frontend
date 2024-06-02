@@ -70,7 +70,7 @@ const Info = React.memo(({
           Deadline:
           {" "}
           <Badge size="3" color="orange">
-            {Number(auctionsInfoBritis.endTime) || "N/A"}
+            {dayjs(auctionsInfoBritis.endTime * 1000).format("YYYY-MM-DD HH:mm")}
           </Badge>
         </p>
         <p className="text-lg font-bold mb-2">
@@ -153,7 +153,6 @@ const Info = React.memo(({
         {" "}
         <Badge size="3" color="orange">
           {dayjs(auctionsInfoDutch.endTime * 1000).format("YYYY-MM-DD HH:mm")}
-          {/* {Number(auctionsInfoDutch.endTime) || "N/A"} */}
         </Badge>
       </p>
       <p className="text-lg font-bold mb-2">
@@ -701,17 +700,6 @@ const DetailContainerPage = () => {
                   </>
                 )
               }
-
-              {/* <div>
-                <Text
-                  size="2"
-                  className="text-green-500 font-bold text-center"
-                  as="p"
-                >
-                  Deadline:
-                  {CurrentNFT.deadline}
-                </Text>
-              </div> */}
             </Tabs.Content>
           </div>
         </Tabs.Root>
