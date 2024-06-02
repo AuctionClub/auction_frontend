@@ -58,6 +58,11 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
       enabled: !!isOnAuctionDutch,
     },
   });
+  useEffect(() => {
+    console.log("拍卖信息：", isOnAuction);
+    console.log("111：", auctionIdQueryBritis);
+    console.log("222：", auctionIdQueryDutch);
+  }, [isOnAuction, auctionIdQueryBritis, auctionIdQueryDutch]);
   const { auctionIdBritis, auctionIdDutch } = useMemo(() => ({
     auctionIdBritis: auctionIdQueryBritis.data,
     auctionIdDutch: auctionIdQueryDutch.data,

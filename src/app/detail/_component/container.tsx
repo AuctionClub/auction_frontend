@@ -343,7 +343,7 @@ const DetailContainerPage = () => {
   const [open, setOpen] = useState(false);
   const [startTime, setStartTime] = React.useState(parseAbsoluteToLocal(dayjs().format()));
   const {
-    approveNft2, data: ApproveNftData, isSuccess: ApproveNftSuccess, isError: ApproveNftError, isPending: ApproveNftLoading,
+    approveNft2, data: ApproveNftData, error: ApproveNftError, isSuccess: ApproveNftSuccess, isError: ApproveNftIsError, isPending: ApproveNftLoading,
   } = useApproveNft();
 
   const account = useAccount();
@@ -424,34 +424,44 @@ const DetailContainerPage = () => {
     getCurrentPrice.isError, getCurrentPrice.error, isSuccess,
   ]);
   useEffect(() => {
+    console.log("授权失败：", ApproveNftError?.message);
+  }, [ApproveNftError]);
+  useEffect(() => {
     if (ApproveNftSuccess) {
+      console.log("授权成功：");
       setErrMsg("");
-      if (isOnAuctionBritish) {
-        console.log("看下参数", parseEther(bidPrice), [formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
-        bidBritish(parseEther(bidPrice), [formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
-      } else if (isOnAuctionDutch) {
-        // if (!getCurrentPrice || getCurrentPrice.isError) {
-        //   setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
-        //   return;
-        // }
-        const a = formatUnits(currentPrice as any, 0);
-        bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
+      const _startTime = dayjs(startTime.toDate()).unix();
+      if (selected === "british") {
+        const args = [parseEther(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
+        createBritish(args);
+      } else {
+        const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
+        createDutch(args);
       }
     }
   }, [
-    ApproveNftSuccess, auctionIdDutch, currentPrice, isOnAuctionDutch, bidPrice, auctionIdBritis, isOnAuctionBritish,
+    ApproveNftSuccess,
+    // startTime,
+    // startPrice,
+    // CurrentNFT,
+    // interval,
+    // floorPrice,
+    // decayInterval,
+    // decayAmount,
+    // reserveDuration,
+    // createBritish,
+    // createDutch,
+    // isOnAuctionBritish,
+    // isOnAuctionDutch,
   ]);
   const bidSubmit = async () => {
     if (!auctionIdDutch && !auctionIdBritis) return;
     setErrMsg("");
     if (isOnAuctionBritish) {
-      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
+      bidBritish(parseEther(bidPrice), [formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
     } else if (isOnAuctionDutch) {
-      if (!getCurrentPrice || getCurrentPrice.isError || getCurrentPrice.isError) {
-        setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
-        return;
-      }
-      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
+      const a = formatUnits(currentPrice as any, 0);
+      bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
     }
   };
   useEffect(() => {
@@ -460,13 +470,10 @@ const DetailContainerPage = () => {
   const submit = async () => {
     if (isPending) return;
     setErrMsg("");
-    const _startTime = dayjs(startTime.toDate()).unix();
     if (selected === "british") {
-      const args = [parseEther(startPrice), Number(_startTime), CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), Number(interval)];
-      await createBritish(args);
+      approveNft2([britisConfig.address, CurrentNFT.tokenId]);
     } else {
-      const args = [CurrentNFT.contractAddress, Number(CurrentNFT.tokenId), parseEther(startPrice), parseEther(floorPrice), Number(_startTime), Number(decayInterval), parseEther(decayAmount), Number(reserveDuration)];
-      await createDutch(args);
+      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
     }
   };
   const cancelAution = async () => {
@@ -576,8 +583,8 @@ const DetailContainerPage = () => {
                      </Text>
                      {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
                      {isSuccess && <Box className="text-[green] my-2">Successful Bid</Box>}
-                     <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx((isPending || ApproveNftLoading) && "!bg-[#ccc]")}>
-                       {(isPending || ApproveNftLoading) && <Spinner className="mr-2" /> }
+                     <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx(isPending && "!bg-[#ccc]")}>
+                       {isPending && <Spinner className="mr-2" /> }
                        <Box>Confirm</Box>
                      </Button>
                    </>
@@ -684,8 +691,8 @@ const DetailContainerPage = () => {
                             </NTab>
                           </NTabs>
                           {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
-                          <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "!bg-[#ccc]")}>
-                            {isPending && <Spinner className="mr-2" /> }
+                          <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", (isPending || ApproveNftLoading) && "!bg-[#ccc]")}>
+                            {(isPending || ApproveNftLoading) && <Spinner className="mr-2" /> }
                             <Box>Submit Auction</Box>
                           </Flex>
                         </Dialog.Content>
