@@ -21,11 +21,12 @@ const useWriteAuction = () => {
       args,
     });
   };
-  const bidBritish = (args:Array<any>) => {
+  const bidBritish = (value:any, args:Array<any>) => {
     writeContract({
       ...britisConfig,
       functionName: "bid",
       args,
+      value,
     });
   };
 

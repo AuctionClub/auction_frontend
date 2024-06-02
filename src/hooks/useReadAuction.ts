@@ -133,6 +133,13 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
       enabled: isOnAuctionDutch && auctionsInfoDutch.isActive,
     },
   });
+  const currentPrice = useMemo(() => {
+    let _currentPrice:any = 0;
+    if (getCurrentPrice.isSuccess) {
+      _currentPrice = getCurrentPrice.data || 0;
+    }
+    return _currentPrice;
+  }, [getCurrentPrice]);
   return {
     isOnAuctionBritish,
     isOnAuctionDutch,
@@ -143,6 +150,7 @@ const useReadAuction = (CurrentNFT:NFTItem, address:Address | undefined) => {
     isOnAuction,
     balances,
     getCurrentPrice,
+    currentPrice,
     isGetAuctionStatus: isOnAuction.isFetched,
   };
 };

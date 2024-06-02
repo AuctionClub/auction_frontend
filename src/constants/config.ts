@@ -2,7 +2,7 @@ import { BritishAuctionAbi, DutchAuctionAbi, NFTAbi } from "@/constants/abi";
 
 export const britisConfig = {
   abi: BritishAuctionAbi,
-  address: "0xA1c7AEaBCB8C7F64d03382cbeEA2cE124d5A26Ff",
+  address: "0x1600c3aC7c86B332DB54A7d783F4e0250353E48F",
 } as const;
 export const dutchConfig = {
   abi: DutchAuctionAbi,

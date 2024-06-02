@@ -353,6 +353,7 @@ const DetailContainerPage = () => {
     auctionsInfoDutch,
     balances,
     getCurrentPrice,
+    currentPrice,
     isGetAuctionStatus,
   } = useReadAuction(CurrentNFT, account.address);
 
@@ -426,18 +427,19 @@ const DetailContainerPage = () => {
     if (ApproveNftSuccess) {
       setErrMsg("");
       if (isOnAuctionBritish) {
-        bidBritish([formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
+        console.log("看下参数", parseEther(bidPrice), [formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
+        bidBritish(parseEther(bidPrice), [formatUnits(auctionIdBritis as any, 0), parseEther(bidPrice)]);
       } else if (isOnAuctionDutch) {
-        if (!getCurrentPrice || getCurrentPrice.isError) {
-          setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
-          return;
-        }
-        const a = formatUnits(getCurrentPrice.data as any, 0);
+        // if (!getCurrentPrice || getCurrentPrice.isError) {
+        //   setErrMsg(getCurrentPrice.error?.shortMessage || getCurrentPrice.error?.message || "Can't get CurrentPrice!");
+        //   return;
+        // }
+        const a = formatUnits(currentPrice as any, 0);
         bidDutch(a, [formatUnits(auctionIdDutch as any, 0)]);
       }
     }
   }, [
-    ApproveNftSuccess, auctionIdDutch, getCurrentPrice, isOnAuctionDutch, bidPrice, auctionIdBritis, bidBritish, bidDutch, isOnAuctionBritish,
+    ApproveNftSuccess, auctionIdDutch, currentPrice, isOnAuctionDutch, bidPrice, auctionIdBritis, isOnAuctionBritish,
   ]);
   const bidSubmit = async () => {
     if (!auctionIdDutch && !auctionIdBritis) return;
@@ -573,6 +575,7 @@ const DetailContainerPage = () => {
                        </Strong>
                      </Text>
                      {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
+                     {isSuccess && <Box className="text-[green] my-2">Successful Bid</Box>}
                      <Button onClick={() => bidSubmit()} style={{ width: "100%", marginTop: "1rem" }} className={clsx((isPending || ApproveNftLoading) && "!bg-[#ccc]")}>
                        {(isPending || ApproveNftLoading) && <Spinner className="mr-2" /> }
                        <Box>Confirm</Box>
