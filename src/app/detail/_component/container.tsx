@@ -471,9 +471,9 @@ const DetailContainerPage = () => {
     if (isPending) return;
     setErrMsg("");
     if (selected === "british") {
-      approveNft2([britisConfig.address, CurrentNFT.tokenId]);
+      approveNft2(CurrentNFT.contractAddress, [britisConfig.address, CurrentNFT.tokenId]);
     } else {
-      approveNft2([dutchConfig.address, CurrentNFT.tokenId]);
+      approveNft2(CurrentNFT.contractAddress, [dutchConfig.address, CurrentNFT.tokenId]);
     }
   };
   const cancelAution = async () => {
