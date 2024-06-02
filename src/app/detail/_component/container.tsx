@@ -62,7 +62,7 @@ const Info = React.memo(({
           </span>
         </p>
         <p className="text-lg font-bold mb-2">
-          start time:
+          Start Time:
           {" "}
           <Badge size="3" color="orange">
             {dayjs(auctionsInfoBritis.startTime * 1000).format("YYYY-MM-DD HH:mm")}
@@ -92,14 +92,14 @@ const Info = React.memo(({
   return (
     <>
       <p className="text-lg font-bold mb-2">
-        final price:
+        Final Price:
         {" "}
         <span className="text-indigo-600">
           N/A
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        starting price:
+        Starting Price:
         {" "}
         <span className="text-indigo-600">
           {auctionsInfoDutch.startingPrice}
@@ -108,7 +108,7 @@ const Info = React.memo(({
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        floor price:
+        Floor Price:
         {" "}
         <span className="text-indigo-600">
           {auctionsInfoDutch.reservePrice}
@@ -117,7 +117,7 @@ const Info = React.memo(({
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        price decay interval:
+        Price Decay Interval:
         {" "}
         <span className="text-indigo-600">
           {auctionsInfoDutch.price_decay_interval}
@@ -126,7 +126,7 @@ const Info = React.memo(({
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        price decay amount:
+        Price Decay Amount:
         {" "}
         <span className="text-indigo-600">
           {auctionsInfoDutch.price_decay_amount}
@@ -135,7 +135,7 @@ const Info = React.memo(({
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        reserve duration:
+        Reserve Duration:
         {" "}
         <span className="text-indigo-600">
           {auctionsInfoDutch.reserve_duration}
@@ -144,7 +144,7 @@ const Info = React.memo(({
         </span>
       </p>
       <p className="text-lg font-bold mb-2">
-        start time:
+        Start Time:
         {" "}
         <Badge size="3" color="orange">
           {dayjs(auctionsInfoDutch.startTime * 1000).format("YYYY-MM-DD HH:mm")}
@@ -227,7 +227,7 @@ const AuctionPanel = React.memo(({
             Best Bid
           </Text>
           <Text as="p" size="2" className="text-gray-500">
-            Top Price from
+            Top Price From
           </Text>
           <Text as="p" size="1" className="text-gray-700">
             {auctionsInfoBritis.currentHighestBidder}
@@ -312,7 +312,7 @@ const AuctionPanel = React.memo(({
             {" "}
             ETH
           </div>
-          <div>decay amount</div>
+          <div>Decay Amount</div>
         </div>
         <div className="bg-gray-100 text-center p-2 rounded shadow-md hover:shadow-lg">
           <div className="text-green-600">
@@ -321,7 +321,7 @@ const AuctionPanel = React.memo(({
             {" "}
             ETH
           </div>
-          <div>decay interval</div>
+          <div>Decay Interval</div>
         </div>
       </div>
     </>
@@ -600,7 +600,7 @@ const DetailContainerPage = () => {
                       <Button onClick={() => cancelAution()} className={clsx(isPending && "!bg-[#ccc]")} style={{ width: "100%", marginBottom: "1rem" }}>
                         {isPending && <Spinner className="mr-2" /> }
                         {" "}
-                        cancel auction
+                        Cancel Auction
                       </Button>
                     ) : (
                       <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -689,7 +689,7 @@ const DetailContainerPage = () => {
                           {errMsg && <Box className="text-[#dc2626] my-2">{errMsg}</Box>}
                           <Flex justify="center" align="center" onClick={() => submit()} className={clsx("w-full bg-blue-700 rounded-md py-2 font-bold text-center text-[#fff] mt-5 cursor-pointer", isPending && "!bg-[#ccc]")}>
                             {isPending && <Spinner className="mr-2" /> }
-                            <Box>submit auction</Box>
+                            <Box>Submit Auction</Box>
                           </Flex>
                         </Dialog.Content>
                       </Dialog.Root>
