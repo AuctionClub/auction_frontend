@@ -29,7 +29,7 @@ import { useWriteAuction, useApproveNft } from "@/hooks/useWriteAuction";
 import useReadAuction from "@/hooks/useReadAuction";
 import clsx from "clsx";
 import { BaseError, useWatchContractEvent, useAccount } from "wagmi";
-import { parseEther, formatUnits } from "viem";
+import { parseEther, formatUnits, formatEther } from "viem";
 import { britisConfig, dutchConfig } from "@/constants";
 
 interface InfoProps{

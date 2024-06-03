@@ -1,11 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { ScrollArea, Spinner, Text } from "@radix-ui/themes";
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import AuctionItem from "@/components/auction/item";
 import { useTheGraph } from "@/hooks/useTheGraph";
 import { useNFTsBycontract, useAggregateNFTs } from "@/hooks/useNFT";
-import { useEffect, useState } from "react";
+import { parseEther, formatUnits, formatEther } from "viem";
 import dayjs from "dayjs";
 import PopoverWarp from "../popover";
 
@@ -159,7 +160,7 @@ export default function AuctionList() {
             tokenId: parseInt(nft.tokenId.toString(), 10),
             contractAddress: nft.contractAddress,
             img: nft.img,
-            price: auction ? auction.startingPrice : (auctionDutch ? auctionDutch.startPrice : nft.price),
+            price: auction ? formatEther(auction.startingPrice) : (auctionDutch ? formatEther(auctionDutch.startPrice) : nft.price),
             tags: nft.tags,
             currentBid: "N/A",
             currentBidder: "N/A",

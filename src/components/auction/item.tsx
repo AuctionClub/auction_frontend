@@ -37,8 +37,15 @@ export default function AuctionItem({ item }: AuctionItemProps) {
         <p className="font-bold text-lg mb-1">{item.name}</p>
         <div className="text-xs">
           <div className="flex">
-            <p>Starting Price:</p>
-            <p>{item.price}</p>
+            <p>
+              Starting Price:
+              {" "}
+            </p>
+            <p>
+              {item.price}
+              {" "}
+              ETH
+            </p>
           </div>
           <div className="flex mt-0.5">
             <p>Type：</p>
