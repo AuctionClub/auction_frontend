@@ -95,9 +95,11 @@ export default function AuctionList() {
       }
       highestBidIncreaseds{
         id
+        auctionId
         bidder
         amount
         transactionHash
+        blockTimestamp
       }
       auctionCreateds{
         id
@@ -130,8 +132,9 @@ export default function AuctionList() {
   }
   auctionStarteds{
     id
-    
     auctionId
+    startTime
+    endTime
     seller
     tokenId
     startPrice  
@@ -154,24 +157,55 @@ export default function AuctionList() {
     if (!auctionLoading && !openSeaLoading && auctionData && openSeaNFTs && auctionDutchData) {
       try {
         const aggregatedData:any = openSeaNFTs.map((nft:any) => {
-          const auction = (auctionData as any)?.data.auctionCreateds.find((a) => a.tokenId === nft.tokenId);
-          const auctionDutch = (auctionDutchData as any).data.auctionStarteds.find((a) => a.tokenId === nft.tokenId);
+          const auctions = (auctionData as any)?.data.auctionCreateds.filter((a) => a.tokenId === nft.tokenId);
+          const auctionDutches = (auctionDutchData as any).data.auctionStarteds.filter((a) => a.tokenId === nft.tokenId);
+
+          let currentBid = "N/A";
+          let currentBidder = "N/A";
+          let auction = null;
+          let auctionDutch = null;
+
+          if (auctions.length > 0) {
+          // Assuming we want to pick the latest auction by _startTime
+            auction = auctions.reduce((latest, current) => (current._startTime > latest._startTime ? current : latest), auctions[0]);
+
+            const highestBids = (auctionData as any)?.data.highestBidIncreaseds
+              .filter((bid) => bid.auctionId === auction.auctionId);
+
+            if (highestBids.length > 0) {
+              const highestBid = highestBids.reduce((maxBid, bid) => (bid.blockTimestamp > maxBid.blockTimestamp ? bid : maxBid), highestBids[0]);
+              currentBid = formatEther(highestBid.amount);
+              currentBidder = highestBid.bidder;
+            }
+          } else if (auctionDutches.length > 0) {
+          // Assuming we want to pick the latest auctionDutch by _startTime
+            auctionDutch = auctionDutches.reduce((latest, current) => (current._startTime > latest._startTime ? current : latest), auctionDutches[0]);
+
+            const auctionEnded = (auctionDutchData as any)?.data.auctionEndeds
+              .find((a) => a.auctionId === auctionDutch.auctionId);
+            if (auctionEnded) {
+              currentBid = formatEther(auctionEnded.finalPrice);
+              currentBidder = auctionEnded.buyer;
+            }
+          }
+
           return {
             tokenId: parseInt(nft.tokenId.toString(), 10),
             contractAddress: nft.contractAddress,
             img: nft.img,
             price: auction ? formatEther(auction.startingPrice) : (auctionDutch ? formatEther(auctionDutch.startPrice) : nft.price),
             tags: nft.tags,
-            currentBid: "N/A",
-            currentBidder: "N/A",
+            currentBid,
+            currentBidder,
             auctionId: auction ? auction.auctionId : (auctionDutch ? auctionDutch.auctionId : ""),
-            deadline: auction ? dayjs(auction._startTime * 1000).format("YYYY-MM-DD HH:mm") : (auctionDutch ? dayjs(auctionDutch._startTime * 1000).format("YYYY-MM-DD HH:mm") : nft.deadline),
+            deadline: auction ? dayjs(auction._startTime * 1000).format("YYYY-MM-DD HH:mm") : (auctionDutch ? dayjs(auctionDutch.startTime * 1000).format("YYYY-MM-DD HH:mm") : nft.deadline),
             name: nft.name,
             description: nft.description,
             isOwner: nft.isOwner,
             auctionType: auction ? "British" : "Dutch",
           };
         }).filter((nft) => (auctionData as any)?.data.auctionCreateds.some((a) => a.tokenId === nft.tokenId.toString()) || (auctionDutchData as any).data.auctionStarteds.some((a) => a.tokenId === nft.tokenId.toString()));
+        aggregatedData.sort((a, b) => (a.deadline < b.deadline ? 1 : -1));
         setAggregatedNFTs(aggregatedData);
         setList(aggregatedData);
       } catch (err:any) {

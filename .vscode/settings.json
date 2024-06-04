@@ -10,16 +10,16 @@
     "eslint.enable": true, // 是否开启检测
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "[javascript]": {
-      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[typescript]": {
-      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[typescriptreact]": {
-      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "[json]": {
-      "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "eslint.validate": [
         "javascript",
@@ -34,4 +34,5 @@
         "json"
     ],
     "eslint.format.enable": true,
+    "commentTranslate.multiLineMerge": true,
 }
